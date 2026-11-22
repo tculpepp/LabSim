@@ -5,3 +5,6 @@ import _ "embed"
 
 //go:embed map.json
 var Map []byte
+
+//go:embed text.json
+var Text []byte

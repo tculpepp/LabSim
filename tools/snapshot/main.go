@@ -1,9 +1,12 @@
 // Command snapshot runs the game for a few frames and saves a PNG of the screen.
-// Dev tool for checking rendering without playing: go run ./tools/snapshot out.png
+// Dev tool for checking rendering without playing:
+//
+//	go run ./tools/snapshot -scene map out.png
 package main
 
 import (
 	"errors"
+	"flag"
 	"image"
 	"image/png"
 	"log"
@@ -53,15 +56,20 @@ func (s *snap) Draw(screen *ebiten.Image) {
 }
 
 func main() {
-	if len(os.Args) != 2 {
-		log.Fatal("usage: snapshot <out.png>")
+	scene := flag.String("scene", "title", "screen to capture (see scenes.DebugScene)")
+	flag.Parse()
+	if flag.NArg() != 1 {
+		log.Fatal("usage: snapshot [-scene name] <out.png>")
 	}
 	app, err := scenes.NewApp()
 	if err != nil {
 		log.Fatal(err)
 	}
+	if err := app.DebugScene(*scene); err != nil {
+		log.Fatal(err)
+	}
 	ebiten.SetWindowSize(1080, 720)
-	if err := ebiten.RunGame(&snap{App: app, out: os.Args[1]}); err != nil && !errors.Is(err, errDone) {
+	if err := ebiten.RunGame(&snap{App: app, out: flag.Arg(0)}); err != nil && !errors.Is(err, errDone) {
 		log.Fatal(err)
 	}
 }

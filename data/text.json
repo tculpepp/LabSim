@@ -1,0 +1,44 @@
+{
+  "title.tagline":       {"junior": "Explore the lab, do cool experiments, and become the best scientist!",
+                          "expert": "Explore the lab, run experiments, test your theories, and become the best scientist."},
+  "title.new":           {"junior": "New Scientist"},
+
+  "creator.title":       {"junior": "Make Your Scientist"},
+  "creator.soon":        {"junior": "Hair, lab coats, and pets are coming soon!"},
+  "creator.level":       {"junior": "Pick your level:"},
+  "creator.junior":      {"junior": "Junior"},
+  "creator.junior.desc": {"junior": "Big hints and easy words"},
+  "creator.expert":      {"junior": "Expert"},
+  "creator.expert.desc": {"junior": "Harder puzzles and more science"},
+  "creator.start":       {"junior": "Start!"},
+  "creator.defaultName": {"junior": "Scientist"},
+
+  "gizmo.name":          {"junior": "Gizmo"},
+  "gizmo.welcome":       {"junior": "Hi %s! I'm Gizmo, your robot helper! Walk around with the arrow keys or W A S D. On a tablet, drag your finger on the left side of the screen. Press E or tap Use to do things. Have fun exploring!",
+                          "expert": "Welcome to the lab, %s. I'm Gizmo. Move with WASD or the arrow keys, or drag on the left side of a touch screen. E or Use interacts, M opens the map, B opens your backpack."},
+
+  "door.locked":         {"junior": "The %s is locked! It costs %d crystals to open. Do jobs to save up!",
+                          "expert": "The %s is locked. Unlock cost: %d crystals."},
+
+  "room.hallway":        {"junior": "Hallway"},
+  "day.new":             {"junior": "Good morning! Day %d"},
+
+  "hud.day":             {"junior": "Day %d"},
+  "hud.bag":             {"junior": "Bag %d/%d"},
+  "hud.map":             {"junior": "Map"},
+  "hud.bagButton":       {"junior": "Bag"},
+  "hud.use":             {"junior": "Use"},
+
+  "inventory.title":     {"junior": "Backpack"},
+  "inventory.slots":     {"junior": "%d of %d slots used"},
+  "inventory.empty":     {"junior": "Your backpack is empty. Grab things you find around the lab!"},
+
+  "map.title":           {"junior": "Lab Map"},
+  "map.you":             {"junior": "You"},
+
+  "pause.title":         {"junior": "Paused"},
+  "pause.resume":        {"junior": "Keep Playing"},
+
+  "overlay.close":       {"junior": "Tap or press Esc to close"},
+  "rotate.hint":         {"junior": "Turn your device sideways to play!"}
+}
