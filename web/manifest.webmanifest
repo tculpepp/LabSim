@@ -1,0 +1,16 @@
+{
+  "name": "LabSim",
+  "short_name": "LabSim",
+  "description": "Walk around the lab, run experiments, and become the best scientist!",
+  "start_url": "./",
+  "scope": "./",
+  "display": "fullscreen",
+  "orientation": "landscape",
+  "background_color": "#1e2a3a",
+  "theme_color": "#3060d0",
+  "icons": [
+    { "src": "icons/icon-192.png", "sizes": "192x192", "type": "image/png" },
+    { "src": "icons/icon-512.png", "sizes": "512x512", "type": "image/png" },
+    { "src": "icons/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ]
+}
