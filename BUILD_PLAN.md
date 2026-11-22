@@ -40,7 +40,7 @@ Go module, wallet, backpack, day clock, job board (all tested), Ebitengine place
 - `internal/filter`: profanity filter that handles leetspeak, spacing, repeated letters, and substrings, plus an allow-list so innocent names aren't blocked by accident (S-2). This package gets heavy table-driven tests.
 - Preset name builder that combines a title, an adjective, and a science word (A-7, S-3). The wardrobe in My Lab re-opens the creator (A-6).
 
-**M5: Items and pickup**
+**M5: Items and pickup ✅ (v0.6.0)**
 - Item catalog in `data/items.json`, including star dust and experiment ingredients.
 - Item spawns per room, re-rolled each new day from the day number (I-4). Grab an item by walking over it or pressing interact (I-1). Inventory screen (I-5).
 - Selling items to Tom (I-3).

@@ -82,6 +82,21 @@
   "pause.resume":        {"junior": "Keep Playing"},
   "pause.startover":     {"junior": "Start Over"},
 
+  "bag.full":            {"junior": "Your backpack is full! Sell things to Tom or get a bigger backpack."},
+  "pickup.got":          {"junior": "+1 %s"},
+
+  "shop.title":          {"junior": "Tom's Shop"},
+  "shop.leave":          {"junior": "Leave"},
+  "shop.buy":            {"junior": "Buy"},
+  "shop.sellTab":        {"junior": "Sell"},
+  "shop.sell":           {"junior": "Sell 1"},
+  "shop.nothing":        {"junior": "Nothing here right now. Check back later!"},
+  "shop.nothingToSell":  {"junior": "Your backpack is empty. Find things around the lab and I'll buy them!"},
+  "tom.name":            {"junior": "Tom"},
+  "tom.hello":           {"junior": "Hi there! I'm Tom. I love helping people become better scientists. Sell me things you find, and save up for cool stuff!",
+                          "expert": "Welcome! I'm Tom. Sell me what you find, and invest in tools that unlock harder experiments."},
+  "tom.sold":            {"junior": "Thanks! Those crystals are yours. Keep exploring!"},
+
   "overlay.close":       {"junior": "Tap or press Esc to close"},
   "rotate.hint":         {"junior": "Turn your device sideways to play!"}
 }

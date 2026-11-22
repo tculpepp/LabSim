@@ -17,3 +17,9 @@ var Names []byte
 
 //go:embed stations.json
 var Stations []byte
+
+//go:embed items.json
+var Items []byte
+
+//go:embed spawns.json
+var Spawns []byte

@@ -1,6 +1,7 @@
 package scenes
 
 import (
+	"image/color"
 	"math"
 	"time"
 
@@ -9,7 +10,9 @@ import (
 
 	"labsim/internal/geom"
 	"labsim/internal/input"
+	"labsim/internal/items"
 	"labsim/internal/state"
+	"labsim/internal/ui"
 	"labsim/internal/world"
 )
 
@@ -36,7 +39,25 @@ type Play struct {
 	roomID  string
 	banner  string
 	bannerT int
+
+	pickups   []items.Pickup
+	pickDay   int
+	floats    []floatText
+	fullWarnT int
 }
+
+// floatText is a little "+1 Star Dust" label that rises and fades.
+type floatText struct {
+	text string
+	x, y float64
+	t    int
+	col  color.Color
+}
+
+const (
+	grabReach  = 22.0
+	floatTicks = 70
+)
 
 func NewPlay(a *App) *Play {
 	s := a.State
@@ -121,6 +142,9 @@ func (p *Play) Update(a *App) error {
 	}
 	p.updateFollowers()
 	p.updateRoom(a)
+	p.refreshPickups(a)
+	p.grab(a)
+	p.tickFloats()
 
 	if inpututil.IsKeyJustPressed(ebiten.KeyE) || inpututil.IsKeyJustPressed(ebiten.KeySpace) ||
 		inpututil.IsKeyJustPressed(ebiten.KeyEnter) ||
@@ -202,7 +226,57 @@ func (p *Play) useStation(a *App, st *world.Station) {
 	switch st.Kind {
 	case "wardrobe":
 		p.open(a, NewEditCreator(a))
+	case "shop":
+		p.open(a, NewShop(a))
 	default:
 		a.Say("gizmo", "gizmo.name", a.T("station.soon"))
 	}
+}
+
+// refreshPickups lays out today's items (I-4: they respawn every day).
+func (p *Play) refreshPickups(a *App) {
+	day := p.s.Clock.Day()
+	if p.pickDay == day {
+		return
+	}
+	p.pickDay = day
+	free := func(x, y float64) bool { return !a.Map.Collides(geom.Centered(x, y, 28, 28), nil) }
+	p.pickups = items.Generate(a.Spawns, a.RoomRects, day, free)
+}
+
+// grab picks up items the player walks over (I-1).
+func (p *Play) grab(a *App) {
+	if p.fullWarnT > 0 {
+		p.fullWarnT--
+	}
+	for _, pk := range p.pickups {
+		if p.s.Picked(pk.Key) || math.Hypot(pk.X-p.s.X, pk.Y-p.s.Y) > grabReach {
+			continue
+		}
+		if err := p.s.Backpack.Add(pk.ItemID, 1); err != nil {
+			if p.fullWarnT == 0 {
+				p.banner, p.bannerT = a.T("bag.full"), bannerTicks*2
+			}
+			p.fullWarnT = bannerTicks * 3
+			continue
+		}
+		p.s.MarkPicked(pk.Key)
+		p.float(a.Tf("pickup.got", a.ItemName(pk.ItemID)), pk.X, pk.Y-20, ui.ColTextLight)
+		a.Sound("pickup")
+	}
+}
+
+func (p *Play) float(text string, x, y float64, c color.Color) {
+	p.floats = append(p.floats, floatText{text: text, x: x, y: y, col: c})
+}
+
+func (p *Play) tickFloats() {
+	kept := p.floats[:0]
+	for _, f := range p.floats {
+		f.t++
+		if f.t < floatTicks {
+			kept = append(kept, f)
+		}
+	}
+	p.floats = kept
 }

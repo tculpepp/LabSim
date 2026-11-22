@@ -57,7 +57,23 @@ func (a *App) DebugScene(name string) error {
 	case "map":
 		a.Push(&MapView{play: play()})
 	case "bag":
-		a.Push(NewInventory(play().s.Backpack))
+		p := play()
+		for _, id := range []string{"star_dust", "battery", "glow_powder", "moon_rock", "pond_sample"} {
+			p.s.Backpack.Add(id, 2)
+		}
+		a.Push(NewInventory(p.s.Backpack))
+	case "storage":
+		p := play()
+		p.s.X, p.s.Y = 1400, 1150
+		p.refreshPickups(a)
+	case "shop-sell":
+		p := play()
+		for _, id := range []string{"star_dust", "battery", "moon_rock"} {
+			p.s.Backpack.Add(id, 3)
+		}
+		sh := NewShop(a)
+		sh.tab = 1
+		a.Push(sh)
 	case "pause":
 		play()
 		a.Push(NewPause(a))

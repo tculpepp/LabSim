@@ -3,6 +3,7 @@ package scenes
 import (
 	"fmt"
 	"image/color"
+	"math"
 	"sort"
 
 	"github.com/hajimehoshi/ebiten/v2"
@@ -43,6 +44,20 @@ func (p *Play) Draw(a *App, screen *ebiten.Image) {
 		st := st
 		sprites = append(sprites, sprite{st.Y + st.H/2, func() { p.drawStation(a, screen, st, cx, cy) }})
 	}
+	for _, pk := range p.pickups {
+		if p.s.Picked(pk.Key) {
+			continue
+		}
+		pk := pk
+		sprites = append(sprites, sprite{pk.Y + 8, func() {
+			bob := math.Sin(p.t*3+pk.X) * 2
+			ui.Shadow(screen, pk.X-cx, pk.Y-cy+9, 16)
+			a.DrawItem(screen, pk.ItemID, pk.X-cx, pk.Y-cy+bob, 20)
+			if math.Mod(p.t+pk.Y/100, 1.6) < 0.25 { // twinkle so kids spot it
+				ui.Diamond(screen, pk.X-cx+8, pk.Y-cy-10+bob, 3, ui.ColTextLight)
+			}
+		}})
+	}
 	feetY := p.s.Y + playerSize/2
 	sprites = append(sprites,
 		sprite{feetY, func() {
@@ -61,6 +76,14 @@ func (p *Play) Draw(a *App, screen *ebiten.Image) {
 		s.draw()
 	}
 	ui.DrawGizmo(screen, p.gizX-cx, p.gizY-cy, 0.9, p.t)
+	for _, f := range p.floats {
+		alpha := 1 - float64(f.t)/floatTicks
+		c := color.RGBA{0xff, 0xff, 0xff, uint8(255 * alpha)}
+		if rgba, ok := f.col.(color.RGBA); ok {
+			c = color.RGBA{uint8(float64(rgba.R) * alpha), uint8(float64(rgba.G) * alpha), uint8(float64(rgba.B) * alpha), uint8(255 * alpha)}
+		}
+		ui.TextCentered(screen, f.text, ui.Bold(ui.SizeBody), f.x-cx, f.y-cy-float64(f.t)*0.5, c)
+	}
 
 	if st := p.nearStation(a); st != nil {
 		p.drawPrompt(a, screen, a.T(stationKey(st.ID)), st.X-cx, st.Y-st.H/2-cy-46)

@@ -2,7 +2,6 @@ package scenes
 
 import (
 	"fmt"
-	"strings"
 
 	"github.com/hajimehoshi/ebiten/v2"
 	"github.com/hajimehoshi/ebiten/v2/inpututil"
@@ -105,15 +104,6 @@ func (v *Inventory) Update(a *App) error {
 	return nil
 }
 
-// itemName turns "star_dust" into "Star dust" until the item catalog lands (M5).
-func itemName(id string) string {
-	s := strings.ReplaceAll(id, "_", " ")
-	if s == "" {
-		return s
-	}
-	return strings.ToUpper(s[:1]) + s[1:]
-}
-
 func (v *Inventory) Draw(a *App, screen *ebiten.Image) {
 	ui.Shade(screen, a.W, a.H)
 	cx, _ := a.center()
@@ -126,10 +116,14 @@ func (v *Inventory) Draw(a *App, screen *ebiten.Image) {
 		lines := ui.Wrap(a.T("inventory.empty"), ui.Regular(ui.SizeBody), b.W-60)
 		ui.Lines(screen, lines, ui.Regular(ui.SizeBody), ui.SizeBody, cx, b.Y+150, ui.ColText, text.AlignCenter)
 	} else {
+		cols := 2
+		cellW := (b.W - 60) / float64(cols)
 		for i, it := range items {
-			y := b.Y + 90 + float64(i)*30
-			ui.Text(screen, itemName(it.ID), ui.Regular(ui.SizeBody), b.X+40, y, ui.ColText, text.AlignStart)
-			ui.Text(screen, fmt.Sprintf("x%d", it.Qty), ui.Bold(ui.SizeBody), b.X+b.W-40, y, ui.ColText, text.AlignEnd)
+			x := b.X + 30 + float64(i%cols)*cellW
+			y := b.Y + 84 + float64(i/cols)*44
+			a.DrawItem(screen, it.ID, x+16, y+12, 26)
+			ui.Text(screen, a.ItemName(it.ID), ui.Bold(ui.SizeBody), x+38, y+1, ui.ColText, text.AlignStart)
+			ui.Text(screen, fmt.Sprintf("x%d", it.Qty), ui.Bold(ui.SizeBody), x+cellW-14, y+1, ui.ColAccent, text.AlignEnd)
 		}
 	}
 	ui.TextCentered(screen, a.T("overlay.close"), ui.Regular(ui.SizeSmall), cx, b.Y+b.H-22, ui.ColAccent)

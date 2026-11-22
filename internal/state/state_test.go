@@ -46,6 +46,7 @@ func TestSnapshotRoundTrip(t *testing.T) {
 	s.SetFlag("welcomed")
 	s.Avatar = map[string]string{"hat": "cap", "pet": "cat"}
 	s.Own("avatar:hat:crown")
+	s.MarkPicked("d2-r0-1")
 
 	codec := save.DefaultCodec()
 	b, err := codec.Encode(s.Snapshot())
@@ -74,6 +75,9 @@ func TestSnapshotRoundTrip(t *testing.T) {
 	}
 	if r.Avatar["hat"] != "cap" || r.Avatar["pet"] != "cat" || !r.Owns("avatar:hat:crown") || r.Owns("avatar:hat:tophat") {
 		t.Fatalf("avatar/owned not restored: %v", r.Avatar)
+	}
+	if !r.Picked("d2-r0-1") || r.Picked("d2-r0-2") {
+		t.Fatal("picked not restored")
 	}
 }
 
@@ -104,5 +108,17 @@ func TestFromSaveBadBackpack(t *testing.T) {
 	d.Items = []save.Item{{ID: "a", Qty: 1}, {ID: "b", Qty: 1}}
 	if _, err := FromSave(d); !errors.Is(err, save.ErrCorrupt) {
 		t.Fatalf("err = %v, want ErrCorrupt", err)
+	}
+}
+
+func TestPickedResetsOnNewDay(t *testing.T) {
+	s := New("x", content.Junior, 0, 0)
+	s.MarkPicked("d1-r0-0")
+	if !s.Picked("d1-r0-0") {
+		t.Fatal("not picked")
+	}
+	s.Clock.Advance(DayLength)
+	if s.Picked("d1-r0-0") {
+		t.Fatal("picked list should reset on a new day")
 	}
 }

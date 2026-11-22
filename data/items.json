@@ -1,0 +1,14 @@
+{
+  "items": [
+    {"id": "star_dust", "name": "Star Dust", "desc": "Sparkly powder in a little jar. Dr. Nova loves it!", "icon": "jar", "color": "#ffe27a", "sell": 3},
+    {"id": "slime_base", "name": "Slime Base", "desc": "Gooey glue. Every slime starts with this!", "icon": "bottle", "color": "#e8f4ff", "sell": 2},
+    {"id": "glow_powder", "name": "Glow Powder", "desc": "A powder that glows in the dark.", "icon": "jar", "color": "#b6ff6a", "sell": 4},
+    {"id": "rainbow_drops", "name": "Rainbow Drops", "desc": "Drops of every color of the rainbow.", "icon": "bottle", "color": "#ff7ac8", "sell": 4},
+    {"id": "bouncy_beads", "name": "Bouncy Beads", "desc": "Tiny super-bouncy balls.", "icon": "beads", "color": "#7ad0ff", "sell": 4},
+    {"id": "stretch_gel", "name": "Stretch Gel", "desc": "Makes things extra stretchy and sticky.", "icon": "tube", "color": "#c89bff", "sell": 4},
+    {"id": "battery", "name": "Battery", "desc": "Stores electrical energy.", "icon": "battery", "color": "#ffb347", "sell": 5},
+    {"id": "light_bulb", "name": "Light Bulb", "desc": "Glows when electricity flows through it.", "icon": "bulb", "color": "#fff3a0", "sell": 5},
+    {"id": "pond_sample", "name": "Pond Sample", "desc": "A jar of pond water. Something is wiggling inside!", "icon": "jar", "color": "#7fc8a9", "sell": 3},
+    {"id": "moon_rock", "name": "Moon Rock", "desc": "A grey, dusty rock from space.", "icon": "rock", "color": "#b9b9c8", "sell": 8}
+  ]
+}

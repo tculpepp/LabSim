@@ -13,6 +13,7 @@ import (
 	"labsim/internal/avatar"
 	"labsim/internal/content"
 	"labsim/internal/geom"
+	"labsim/internal/items"
 	"labsim/internal/names"
 	"labsim/internal/save"
 	"labsim/internal/stack"
@@ -38,6 +39,9 @@ type App struct {
 	Text       *content.Catalog
 	Avatars    *avatar.Catalog
 	Names      *names.Builder
+	Items      *items.Catalog
+	Spawns     []items.Rule
+	RoomRects  map[string]geom.Rect
 	Pointer    ui.Pointer
 
 	// State is the current game, nil on the title screen.
@@ -50,6 +54,7 @@ type App struct {
 	notice string     // message for the title screen, e.g. corrupt save
 
 	scenes stack.Stack[Scene]
+	sfx    func(name string)
 }
 
 func NewApp(store save.Store) (*App, error) {
@@ -76,7 +81,20 @@ func NewApp(store save.Store) (*App, error) {
 	if err != nil {
 		return nil, fmt.Errorf("load names: %w", err)
 	}
-	a := &App{W: 720, H: geom.LogicalH, Map: m, Text: txt, Avatars: av, Names: nb, Store: store, Codec: save.DefaultCodec()}
+	ic, err := items.Load(data.Items)
+	if err != nil {
+		return nil, fmt.Errorf("load items: %w", err)
+	}
+	rooms := map[string]geom.Rect{}
+	for _, r := range m.Rooms {
+		rooms[r.ID] = r.Bounds
+	}
+	rules, err := items.LoadRules(data.Spawns, ic, rooms)
+	if err != nil {
+		return nil, fmt.Errorf("load spawns: %w", err)
+	}
+	a := &App{W: 720, H: geom.LogicalH, Map: m, Text: txt, Avatars: av, Names: nb,
+		Items: ic, Spawns: rules, RoomRects: rooms, Store: store, Codec: save.DefaultCodec()}
 	a.autosave = save.NewAutosaver(autosaveInterval, a.writeSave)
 	a.checkSave()
 	a.scenes.Push(NewTitle(a))
@@ -237,3 +255,28 @@ func (a *App) Layout(outW, outH int) (int, int) {
 
 // center returns the screen center.
 func (a *App) center() (float64, float64) { return float64(a.W) / 2, float64(a.H) / 2 }
+
+// ItemName returns an item's display name (or its ID if unknown).
+func (a *App) ItemName(id string) string {
+	if it, ok := a.Items.Get(id); ok {
+		return it.Name
+	}
+	return id
+}
+
+// DrawItem draws an item's icon.
+func (a *App) DrawItem(screen *ebiten.Image, id string, x, y, size float64) {
+	it, ok := a.Items.Get(id)
+	if !ok {
+		ui.Diamond(screen, x, y, size/2, ui.ColLocked)
+		return
+	}
+	ui.ItemIcon(screen, it.Icon, ui.Hex(it.Color), x, y, size)
+}
+
+// Sound plays a named sound effect (no-op until audio is loaded).
+func (a *App) Sound(name string) {
+	if a.sfx != nil {
+		a.sfx(name)
+	}
+}

@@ -40,6 +40,9 @@ type Data struct {
 
 	Avatar map[string]string `json:"avatar,omitempty"`
 	Owned  []string          `json:"owned,omitempty"`
+
+	PickedDay int      `json:"pickedDay,omitempty"`
+	Picked    []string `json:"picked,omitempty"` // pickup keys grabbed on PickedDay
 }
 
 // Migration upgrades raw save JSON from version v to v+1 in place.
