@@ -8,3 +8,12 @@ var Map []byte
 
 //go:embed text.json
 var Text []byte
+
+//go:embed avatar.json
+var Avatar []byte
+
+//go:embed names.json
+var Names []byte
+
+//go:embed stations.json
+var Stations []byte

@@ -8,6 +8,7 @@ import (
 
 	"labsim/data"
 	"labsim/internal/content"
+	"labsim/internal/save"
 )
 
 // Every text key used in scene code must exist in data/text.json.
@@ -35,5 +36,14 @@ func TestAllTextKeysExist(t *testing.T) {
 	}
 	if found < 10 {
 		t.Fatalf("only found %d keys; regexp broken?", found)
+	}
+}
+
+func TestStationLabels(t *testing.T) {
+	a := newApp(t, &save.MemStore{})
+	for _, st := range a.Map.Stations() {
+		if !a.Text.Has(stationKey(st.ID)) {
+			t.Errorf("station %q has no %q text", st.ID, stationKey(st.ID))
+		}
 	}
 }

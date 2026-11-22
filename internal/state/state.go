@@ -27,9 +27,11 @@ type State struct {
 	Wallet   *economy.Wallet
 	Backpack *inventory.Backpack
 	Clock    *clock.Clock
+	Avatar   map[string]string // part → option; normalized against the catalog by the UI
 
 	unlocked map[string]bool
 	flags    map[string]bool
+	owned    map[string]bool // shop purchases, e.g. "avatar:hat:crown", "tool:telescope"
 }
 
 // New starts a fresh scientist at (x, y).
@@ -39,8 +41,10 @@ func New(name string, lvl content.Level, x, y float64) *State {
 		Wallet:   economy.NewWallet(0),
 		Backpack: inventory.NewBackpack(StartBackpackSlots),
 		Clock:    clock.New(DayLength),
+		Avatar:   map[string]string{},
 		unlocked: map[string]bool{},
 		flags:    map[string]bool{},
+		owned:    map[string]bool{},
 	}
 }
 
@@ -48,6 +52,8 @@ func (s *State) Unlock(roomID string)          { s.unlocked[roomID] = true }
 func (s *State) IsUnlocked(roomID string) bool { return s.unlocked[roomID] }
 func (s *State) SetFlag(name string)           { s.flags[name] = true }
 func (s *State) Flag(name string) bool         { return s.flags[name] }
+func (s *State) Own(key string)                { s.owned[key] = true }
+func (s *State) Owns(key string) bool          { return s.owned[key] }
 
 func keys(m map[string]bool) []string {
 	var out []string
@@ -75,6 +81,8 @@ func (s *State) Snapshot() save.Data {
 		DayElapsedMs:  s.Clock.Elapsed().Milliseconds(),
 		Unlocked:      keys(s.unlocked),
 		Flags:         keys(s.flags),
+		Avatar:        s.Avatar,
+		Owned:         keys(s.owned),
 	}
 }
 
@@ -96,6 +104,12 @@ func FromSave(d save.Data) (*State, error) {
 	}
 	for _, f := range d.Flags {
 		s.SetFlag(f)
+	}
+	for _, k := range d.Owned {
+		s.Own(k)
+	}
+	for k, v := range d.Avatar {
+		s.Avatar[k] = v
 	}
 	return s, nil
 }

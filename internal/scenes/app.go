@@ -10,8 +10,10 @@ import (
 	"github.com/hajimehoshi/ebiten/v2"
 
 	"labsim/data"
+	"labsim/internal/avatar"
 	"labsim/internal/content"
 	"labsim/internal/geom"
+	"labsim/internal/names"
 	"labsim/internal/save"
 	"labsim/internal/stack"
 	"labsim/internal/state"
@@ -34,6 +36,8 @@ type App struct {
 	outW, outH int // outside (window/CSS) size
 	Map        *world.Map
 	Text       *content.Catalog
+	Avatars    *avatar.Catalog
+	Names      *names.Builder
 	Pointer    ui.Pointer
 
 	// State is the current game, nil on the title screen.
@@ -53,11 +57,26 @@ func NewApp(store save.Store) (*App, error) {
 	if err != nil {
 		return nil, fmt.Errorf("load map: %w", err)
 	}
+	st, err := world.LoadStations(data.Stations)
+	if err == nil {
+		err = m.AddStations(st)
+	}
+	if err != nil {
+		return nil, fmt.Errorf("load stations: %w", err)
+	}
 	txt, err := content.Load(data.Text)
 	if err != nil {
 		return nil, fmt.Errorf("load text: %w", err)
 	}
-	a := &App{W: 720, H: geom.LogicalH, Map: m, Text: txt, Store: store, Codec: save.DefaultCodec()}
+	av, err := avatar.Load(data.Avatar)
+	if err != nil {
+		return nil, fmt.Errorf("load avatar: %w", err)
+	}
+	nb, err := names.Load(data.Names)
+	if err != nil {
+		return nil, fmt.Errorf("load names: %w", err)
+	}
+	a := &App{W: 720, H: geom.LogicalH, Map: m, Text: txt, Avatars: av, Names: nb, Store: store, Codec: save.DefaultCodec()}
 	a.autosave = save.NewAutosaver(autosaveInterval, a.writeSave)
 	a.checkSave()
 	a.scenes.Push(NewTitle(a))
@@ -146,8 +165,9 @@ func (a *App) SaveNow() {
 func (a *App) SaveFailing() bool { return a.autosave.LastErr() != nil }
 
 // StartNewGame begins play with a fresh scientist, replacing any old save.
-func (a *App) StartNewGame(name string, lvl content.Level) {
+func (a *App) StartNewGame(name string, lvl content.Level, av avatar.Avatar) {
 	a.State = state.New(name, lvl, a.Map.Spawn.X, a.Map.Spawn.Y)
+	a.State.Avatar = a.Avatars.Normalize(av, nil)
 	a.Replace(NewPlay(a))
 	a.SaveNow()
 	a.Say("gizmo", "gizmo.name", a.Tf("gizmo.welcome", name))
@@ -171,6 +191,7 @@ func (a *App) ContinueGame() error {
 	if !(geom.Rect{W: a.Map.Width, H: a.Map.Height}).ContainsRect(box) || a.Map.Collides(box, s.IsUnlocked) {
 		s.X, s.Y = a.Map.Spawn.X, a.Map.Spawn.Y
 	}
+	s.Avatar = a.Avatars.Normalize(s.Avatar, s.Owns)
 	a.State = s
 	a.Replace(NewPlay(a))
 	return nil

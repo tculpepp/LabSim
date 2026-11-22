@@ -3,6 +3,7 @@ package scenes
 import (
 	"testing"
 
+	"labsim/internal/avatar"
 	"labsim/internal/content"
 	"labsim/internal/save"
 )
@@ -26,7 +27,7 @@ func TestFreshStartHasNoContinue(t *testing.T) {
 func TestNewGameSavesAndContinues(t *testing.T) {
 	store := &save.MemStore{}
 	a := newApp(t, store)
-	a.StartNewGame("Dr. Pip", content.Expert)
+	a.StartNewGame("Dr. Pip", content.Expert, avatar.Avatar{"hat": "cap", "pet": "cat"})
 	a.State.Wallet.Earn(12)
 	a.State.Backpack.Add("star_dust", 2)
 	a.State.X, a.State.Y = 260, 210 // inside the Chemistry Lab
@@ -42,6 +43,9 @@ func TestNewGameSavesAndContinues(t *testing.T) {
 	s := b.State
 	if s.Name != "Dr. Pip" || s.Level != content.Expert || s.Wallet.Crystals() != 12 || s.Backpack.Count("star_dust") != 2 {
 		t.Fatalf("restored %+v", s)
+	}
+	if s.Avatar["hat"] != "cap" || s.Avatar["pet"] != "cat" || s.Avatar["skin"] == "" {
+		t.Fatalf("avatar not restored/normalized: %v", s.Avatar)
 	}
 	if s.X != 260 || s.Y != 210 || !s.Flag("welcomed") {
 		t.Fatalf("position/flags not restored: %v,%v welcomed=%v", s.X, s.Y, s.Flag("welcomed"))
@@ -75,7 +79,7 @@ func TestFutureSaveIsBackedUp(t *testing.T) {
 func TestContinueInsideWallResetsToSpawn(t *testing.T) {
 	store := &save.MemStore{}
 	a := newApp(t, store)
-	a.StartNewGame("x", content.Junior)
+	a.StartNewGame("x", content.Junior, nil)
 	a.State.X, a.State.Y = 84, 100 // on the Chemistry Lab's left wall
 	a.SaveNow()
 
@@ -91,7 +95,7 @@ func TestContinueInsideWallResetsToSpawn(t *testing.T) {
 func TestStartOverClearsSave(t *testing.T) {
 	store := &save.MemStore{}
 	a := newApp(t, store)
-	a.StartNewGame("x", content.Junior)
+	a.StartNewGame("x", content.Junior, nil)
 	a.StartOver()
 	if a.State != nil || a.HasSave() {
 		t.Fatal("state or save survived Start Over")
@@ -107,5 +111,33 @@ func TestSaveNowWithoutGameIsNoop(t *testing.T) {
 	a.SaveNow()
 	if _, err := store.Load(); err == nil {
 		t.Fatal("title screen should not write a save")
+	}
+}
+
+func TestPaidAvatarPartsNeedOwnership(t *testing.T) {
+	a := newApp(t, &save.MemStore{})
+	a.StartNewGame("x", content.Junior, avatar.Avatar{"hat": "crown"})
+	if a.State.Avatar["hat"] == "crown" {
+		t.Fatal("new scientist got a paid crown for free")
+	}
+}
+
+func TestEditCreatorSavesLook(t *testing.T) {
+	store := &save.MemStore{}
+	a := newApp(t, store)
+	a.StartNewGame("x", content.Junior, nil)
+	c := NewEditCreator(a)
+	c.av["hat"] = "beanie"
+	c.custom = "Dr. New"
+	c.level = content.Expert
+	a.Push(c)
+	c.finish(a)
+	if a.State.Avatar["hat"] != "beanie" || a.State.Name != "Dr. New" || a.State.Level != content.Expert {
+		t.Fatalf("edit not applied: %+v", a.State)
+	}
+	b := newApp(t, store)
+	b.ContinueGame()
+	if b.State.Name != "Dr. New" || b.State.Avatar["hat"] != "beanie" {
+		t.Fatal("edit not saved")
 	}
 }

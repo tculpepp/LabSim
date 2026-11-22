@@ -68,8 +68,10 @@ type Map struct {
 	Spawn  Point   `json:"spawn"`
 	Rooms  []Room  `json:"rooms"`
 
-	walls []geom.Rect
-	doors []Door
+	walls     []geom.Rect
+	doors     []Door
+	stations  []Station
+	obstacles []geom.Rect
 }
 
 func invalid(format string, a ...any) error {
@@ -244,8 +246,9 @@ func (m *Map) DoorLocked(d Door, unlocked UnlockedFunc) bool {
 
 // Solids returns every rect the player cannot pass: walls plus locked doors.
 func (m *Map) Solids(unlocked UnlockedFunc) []geom.Rect {
-	out := make([]geom.Rect, len(m.walls), len(m.walls)+len(m.doors))
-	copy(out, m.walls)
+	out := make([]geom.Rect, 0, len(m.walls)+len(m.obstacles)+len(m.doors))
+	out = append(out, m.walls...)
+	out = append(out, m.obstacles...)
 	for _, d := range m.doors {
 		if m.DoorLocked(d, unlocked) {
 			out = append(out, d.Rect)

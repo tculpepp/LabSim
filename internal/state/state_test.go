@@ -44,6 +44,8 @@ func TestSnapshotRoundTrip(t *testing.T) {
 	s.Clock.Advance(DayLength + 90*time.Second)
 	s.Unlock("robot_workshop")
 	s.SetFlag("welcomed")
+	s.Avatar = map[string]string{"hat": "cap", "pet": "cat"}
+	s.Own("avatar:hat:crown")
 
 	codec := save.DefaultCodec()
 	b, err := codec.Encode(s.Snapshot())
@@ -69,6 +71,9 @@ func TestSnapshotRoundTrip(t *testing.T) {
 	}
 	if !r.IsUnlocked("robot_workshop") || !r.Flag("welcomed") {
 		t.Fatal("unlocks/flags not restored")
+	}
+	if r.Avatar["hat"] != "cap" || r.Avatar["pet"] != "cat" || !r.Owns("avatar:hat:crown") || r.Owns("avatar:hat:tophat") {
+		t.Fatalf("avatar/owned not restored: %v", r.Avatar)
 	}
 }
 

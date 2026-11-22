@@ -15,7 +15,42 @@ func loadMap(t *testing.T) *world.Map {
 	if err != nil {
 		t.Fatalf("map.json invalid: %v", err)
 	}
+	st, err := world.LoadStations(Stations)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if err := m.AddStations(st); err != nil {
+		t.Fatalf("stations.json invalid: %v", err)
+	}
 	return m
+}
+
+// Every station must be usable: some reachable spot is within reach of it.
+func TestStationsReachable(t *testing.T) {
+	m := loadMap(t)
+	reached := flood(m, func(string) bool { return true })
+	for _, s := range m.Stations() {
+		ok := false
+		for c := range reached {
+			cx, cy := (float64(c.x)+0.5)*step, (float64(c.y)+0.5)*step
+			if m.StationNear(geom.Centered(cx, cy, playerSize, playerSize), 18) == &m.Stations()[indexOf(m, s.ID)] {
+				ok = true
+				break
+			}
+		}
+		if !ok {
+			t.Errorf("station %q cannot be reached", s.ID)
+		}
+	}
+}
+
+func indexOf(m *world.Map, id string) int {
+	for i, s := range m.Stations() {
+		if s.ID == id {
+			return i
+		}
+	}
+	return -1
 }
 
 // M-2: the 10 rooms the designer confirmed.
@@ -54,8 +89,13 @@ func TestAllRoomsReachable(t *testing.T) {
 		var unlocked world.UnlockedFunc = func(string) bool { return unlockedAll }
 		reached := flood(m, unlocked)
 		for _, r := range m.Rooms {
-			cx, cy := r.Bounds.Center()
-			got := reached[cell(cx, cy)]
+			got := false
+			for c := range reached {
+				if r.Bounds.Expand(-world.WallThickness).Contains((float64(c.x)+0.5)*step, (float64(c.y)+0.5)*step) {
+					got = true
+					break
+				}
+			}
 			want := !r.Locked || unlockedAll
 			if got != want {
 				t.Errorf("unlocked=%v room %q reachable=%v want %v", unlockedAll, r.ID, got, want)

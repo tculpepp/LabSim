@@ -35,7 +35,7 @@ Go module, wallet, backpack, day clock, job board (all tested), Ebitengine place
 - Autosave on room change, job completion, purchase, and every 30 seconds. "Start over" asks for confirmation (SV-1, SV-2).
 - Tests: save round-trip, loading an old version, and corrupt-save fallback.
 
-**M4: Avatar creator and safe names**
+**M4: Avatar creator and safe names ✅ (v0.5.0)**
 - Layered avatar (body, skin, hair, coat, clothes, accessories) and choice of starter pet (A-1–A-5, A-8).
 - `internal/filter`: profanity filter that handles leetspeak, spacing, repeated letters, and substrings, plus an allow-list so innocent names aren't blocked by accident (S-2). This package gets heavy table-driven tests.
 - Preset name builder that combines a title, an adjective, and a science word (A-7, S-3). The wardrobe in My Lab re-opens the creator (A-6).

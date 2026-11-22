@@ -1,0 +1,13 @@
+{
+  "stations": [
+    {"id": "nova", "kind": "npc", "room": "office", "x": 840, "y": 150, "w": 96, "h": 36},
+    {"id": "tom", "kind": "shop", "room": "shop", "x": 1400, "y": 140, "w": 110, "h": 36},
+    {"id": "exp_slime", "kind": "experiment", "room": "chemistry", "x": 280, "y": 150, "w": 96, "h": 40},
+    {"id": "exp_circuit", "kind": "experiment", "room": "physics", "x": 280, "y": 580, "w": 96, "h": 40},
+    {"id": "exp_microscope", "kind": "experiment", "room": "greenhouse", "x": 280, "y": 1050, "w": 72, "h": 40},
+    {"id": "exp_gravity", "kind": "experiment", "room": "space_lab", "x": 1400, "y": 580, "w": 96, "h": 40},
+    {"id": "wardrobe", "kind": "wardrobe", "room": "my_lab", "x": 690, "y": 965, "w": 44, "h": 56},
+    {"id": "decorate", "kind": "decorate", "room": "my_lab", "x": 985, "y": 960, "w": 56, "h": 40},
+    {"id": "workshop", "kind": "workshop", "room": "robot_workshop", "x": 1940, "y": 580, "w": 110, "h": 40}
+  ]
+}

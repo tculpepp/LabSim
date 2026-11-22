@@ -7,7 +7,6 @@ import (
 	"github.com/hajimehoshi/ebiten/v2"
 	"github.com/hajimehoshi/ebiten/v2/text/v2"
 
-	"labsim/internal/content"
 	"labsim/internal/geom"
 	"labsim/internal/ui"
 )
@@ -77,62 +76,5 @@ func (t *Title) Draw(a *App, screen *ebiten.Image) {
 	if a.notice != "" {
 		lines := ui.Wrap(a.T(a.notice), ui.Regular(ui.SizeSmall), float64(a.W)-80)
 		ui.Lines(screen, lines, ui.Regular(ui.SizeSmall), ui.SizeSmall, cx, float64(a.H)-60, ui.ColFocus, text.AlignCenter)
-	}
-}
-
-// Creator is the avatar creator. M2 stub: pick difficulty only; full creator is M4.
-type Creator struct {
-	level content.Level
-	menu  ui.Menu
-}
-
-func NewCreator(a *App) *Creator {
-	c := &Creator{level: content.Junior}
-	c.menu.Buttons = []ui.Button{{Label: a.T("creator.junior")}, {Label: a.T("creator.expert")}, {Label: a.T("creator.start")}}
-	c.menu.Focus = 2
-	return c
-}
-
-func (c *Creator) Opaque() bool { return true }
-
-func (c *Creator) layout(a *App) {
-	cx, _ := a.center()
-	c.menu.Buttons[0].R = geom.Centered(cx-130, 250, 220, 56)
-	c.menu.Buttons[1].R = geom.Centered(cx+130, 250, 220, 56)
-	c.menu.Buttons[2].R = geom.Centered(cx, 400, 220, 56)
-}
-
-func (c *Creator) Update(a *App) error {
-	c.layout(a)
-	switch c.menu.Update(&a.Pointer) {
-	case 0:
-		c.level = content.Junior
-	case 1:
-		c.level = content.Expert
-	case 2:
-		a.StartNewGame(a.T("creator.defaultName"), c.level)
-	}
-	return nil
-}
-
-func (c *Creator) Draw(a *App, screen *ebiten.Image) {
-	c.layout(a)
-	screen.Fill(colTitleBG)
-	cx, _ := a.center()
-	ui.TextCentered(screen, a.T("creator.title"), ui.Bold(ui.SizeHeading+8), cx, 50, ui.ColTextLight)
-	ui.TextCentered(screen, a.T("creator.soon"), ui.Regular(ui.SizeBody), cx, 92, ui.ColTextLight)
-	ui.TextCentered(screen, a.T("creator.level"), ui.Bold(ui.SizeHeading), cx, 180, ui.ColTextLight)
-	c.menu.Draw(screen)
-	// Mark the chosen level with a ring, separate from keyboard focus.
-	sel := c.menu.Buttons[0].R
-	if c.level == content.Expert {
-		sel = c.menu.Buttons[1].R
-	}
-	ui.RoundRect(screen, sel.Expand(6), 16, color.Transparent, 4, ui.ColCrystal)
-	descs := []string{a.T("creator.junior.desc"), a.T("creator.expert.desc")}
-	for i, d := range descs {
-		r := c.menu.Buttons[i].R
-		lines := ui.Wrap(d, ui.Regular(ui.SizeSmall), r.W)
-		ui.Lines(screen, lines, ui.Regular(ui.SizeSmall), ui.SizeSmall, r.X+r.W/2, r.Y+r.H+14, ui.ColTextLight, text.AlignCenter)
 	}
 }

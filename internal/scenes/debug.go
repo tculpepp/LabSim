@@ -11,7 +11,8 @@ import (
 // visual checks; not reachable from normal play.
 func (a *App) DebugScene(name string) error {
 	play := func() *Play {
-		a.State = state.New("Scientist", content.Junior, a.Map.Spawn.X, a.Map.Spawn.Y)
+		a.State = state.New("Doctor Sparkle Beaker", content.Junior, a.Map.Spawn.X, a.Map.Spawn.Y)
+		a.State.Avatar = a.Avatars.Default()
 		p := NewPlay(a)
 		a.Replace(p)
 		return p
@@ -26,10 +27,33 @@ func (a *App) DebugScene(name string) error {
 		a.Replace(NewTitle(a))
 	case "creator":
 		a.Replace(NewCreator(a))
+	case "creator-name":
+		c := NewCreator(a)
+		c.tab = 3
+		a.Replace(c)
+	case "keyboard":
+		a.Replace(NewCreator(a))
+		k := NewKeyboard("Shit", func(*App, string) {})
+		k.text = "Doctor Poo"
+		k.errKey = "name.blocked"
+		a.Push(k)
+	case "office":
+		p := play()
+		p.s.X, p.s.Y = 840, 230
+		p.updateFollowers()
+	case "shop":
+		p := play()
+		p.s.X, p.s.Y = 1400, 220
+	case "mylab":
+		p := play()
+		p.s.X, p.s.Y = 760, 1000
+		p.s.Avatar = map[string]string{"body": "strong", "skin": "s5", "hair": "curly", "hairColor": "pink",
+			"coat": "green", "shirt": "yellow", "shoes": "red", "pattern": "dots", "eyewear": "goggles",
+			"hat": "beanie", "gear": "backpack", "pet": "slime"}
 	case "play":
 		play()
 	case "welcome":
-		a.StartNewGame("Scientist", content.Junior)
+		a.StartNewGame("Scientist", content.Junior, a.Avatars.Default())
 	case "map":
 		a.Push(&MapView{play: play()})
 	case "bag":

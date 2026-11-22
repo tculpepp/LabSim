@@ -27,12 +27,14 @@ func roundPath(r geom.Rect, radius float64) *vector.Path {
 	return &p
 }
 
-// RoundRect fills a rounded rectangle, with an optional outline (lineW > 0).
+// RoundRect fills a rounded rectangle (fill may be nil), with an optional outline (lineW > 0).
 func RoundRect(dst *ebiten.Image, r geom.Rect, radius float64, fill color.Color, lineW float64, line color.Color) {
 	p := roundPath(r, radius)
-	op := &vector.DrawPathOptions{AntiAlias: true}
-	op.ColorScale.ScaleWithColor(fill)
-	vector.FillPath(dst, p, nil, op)
+	if fill != nil {
+		op := &vector.DrawPathOptions{AntiAlias: true}
+		op.ColorScale.ScaleWithColor(fill)
+		vector.FillPath(dst, p, nil, op)
+	}
 	if lineW > 0 {
 		sop := &vector.DrawPathOptions{AntiAlias: true}
 		sop.ColorScale.ScaleWithColor(line)
@@ -70,6 +72,8 @@ func (b Button) Draw(dst *ebiten.Image, focused bool) {
 type Menu struct {
 	Buttons []Button
 	Focus   int
+
+	hideFocus bool // touch players have no "focus"; only keyboard/mouse do
 }
 
 // Update returns the index of the activated button, or -1.
@@ -77,6 +81,10 @@ func (m *Menu) Update(p *Pointer) int {
 	n := len(m.Buttons)
 	if n == 0 {
 		return -1
+	}
+	m.hideFocus = p.TouchDevice()
+	if len(inpututil.AppendJustPressedKeys(nil)) > 0 {
+		m.hideFocus = false
 	}
 	if inpututil.IsKeyJustPressed(ebiten.KeyArrowDown) || inpututil.IsKeyJustPressed(ebiten.KeyArrowRight) ||
 		inpututil.IsKeyJustPressed(ebiten.KeyS) || inpututil.IsKeyJustPressed(ebiten.KeyD) || inpututil.IsKeyJustPressed(ebiten.KeyTab) {
@@ -108,7 +116,7 @@ func (m *Menu) Update(p *Pointer) int {
 
 func (m *Menu) Draw(dst *ebiten.Image) {
 	for i, b := range m.Buttons {
-		b.Draw(dst, i == m.Focus)
+		b.Draw(dst, i == m.Focus && !m.hideFocus)
 	}
 }
 

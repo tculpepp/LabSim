@@ -37,6 +37,9 @@ type Data struct {
 	DayElapsedMs  int64    `json:"dayElapsedMs"`
 	Unlocked      []string `json:"unlocked,omitempty"`
 	Flags         []string `json:"flags,omitempty"`
+
+	Avatar map[string]string `json:"avatar,omitempty"`
+	Owned  []string          `json:"owned,omitempty"`
 }
 
 // Migration upgrades raw save JSON from version v to v+1 in place.

@@ -1,25 +1,22 @@
 package scenes
 
 import (
-	"fmt"
-	"image/color"
+	"math"
 	"time"
 
 	"github.com/hajimehoshi/ebiten/v2"
 	"github.com/hajimehoshi/ebiten/v2/inpututil"
-	"github.com/hajimehoshi/ebiten/v2/text/v2"
 
 	"labsim/internal/geom"
 	"labsim/internal/input"
 	"labsim/internal/state"
-	"labsim/internal/ui"
 	"labsim/internal/world"
 )
 
 const (
 	playerSize    = 24.0
 	playerSpeed   = 3.0 // logical px per tick at full stick
-	interactReach = 20.0
+	interactReach = 18.0
 	bannerTicks   = 120
 )
 
@@ -28,17 +25,27 @@ type Play struct {
 	s   *state.State
 	joy *input.Joystick
 
+	t      float64 // seconds since scene start (animations)
+	facing float64
+	moving bool
+	petX   float64
+	petY   float64
+	gizX   float64
+	gizY   float64
+
 	roomID  string
 	banner  string
 	bannerT int
 }
 
 func NewPlay(a *App) *Play {
-	p := &Play{s: a.State, joy: input.NewJoystick(50, 8)}
-	if r := a.Map.RoomAt(p.s.X, p.s.Y); r != nil {
+	s := a.State
+	p := &Play{s: s, joy: input.NewJoystick(50, 8), facing: 1,
+		petX: s.X - 22, petY: s.Y + 6, gizX: s.X + 26, gizY: s.Y - 34}
+	if r := a.Map.RoomAt(s.X, s.Y); r != nil {
 		p.roomID = r.ID
 	}
-	p.s.Room = p.roomID
+	s.Room = p.roomID
 	return p
 }
 
@@ -68,8 +75,15 @@ func (p *Play) onButton(a *App, x, y float64) bool {
 	return false
 }
 
+// open pushes an overlay, releasing the joystick first.
+func (p *Play) open(a *App, s Scene) {
+	p.joy.End(p.joy.ID())
+	a.Push(s)
+}
+
 func (p *Play) Update(a *App) error {
 	dt := time.Second / time.Duration(ebiten.TPS())
+	p.t += dt.Seconds()
 	if p.s.Clock.Advance(dt) > 0 {
 		p.banner, p.bannerT = a.Tf("day.new", p.s.Clock.Day()), bannerTicks*2
 	} else if p.bannerT > 0 {
@@ -79,16 +93,13 @@ func (p *Play) Update(a *App) error {
 
 	switch {
 	case inpututil.IsKeyJustPressed(ebiten.KeyM) || a.Pointer.TapIn(p.mapButton(a)):
-		p.joy.End(p.joy.ID())
-		a.Push(&MapView{play: p})
+		p.open(a, &MapView{play: p})
 		return nil
 	case inpututil.IsKeyJustPressed(ebiten.KeyI) || inpututil.IsKeyJustPressed(ebiten.KeyB) || a.Pointer.TapIn(p.bagButton(a)):
-		p.joy.End(p.joy.ID())
-		a.Push(NewInventory(p.s.Backpack))
+		p.open(a, NewInventory(p.s.Backpack))
 		return nil
 	case inpututil.IsKeyJustPressed(ebiten.KeyEscape) || inpututil.IsKeyJustPressed(ebiten.KeyP) || a.Pointer.TapIn(p.pauseButton(a)):
-		p.joy.End(p.joy.ID())
-		a.Push(NewPause(a))
+		p.open(a, NewPause(a))
 		return nil
 	}
 
@@ -104,6 +115,11 @@ func (p *Play) Update(a *App) error {
 	}
 	nb := a.Map.Move(p.box(), dx*playerSpeed, dy*playerSpeed, p.isUnlocked)
 	p.s.X, p.s.Y = nb.Center()
+	p.moving = dx != 0 || dy != 0
+	if math.Abs(dx) > 0.2 {
+		p.facing = math.Copysign(1, dx)
+	}
+	p.updateFollowers()
 	p.updateRoom(a)
 
 	if inpututil.IsKeyJustPressed(ebiten.KeyE) || inpututil.IsKeyJustPressed(ebiten.KeySpace) ||
@@ -112,6 +128,15 @@ func (p *Play) Update(a *App) error {
 		p.interact(a)
 	}
 	return nil
+}
+
+// updateFollowers eases the pet (behind) and Gizmo (floating beside) toward the player.
+func (p *Play) updateFollowers() {
+	ease := func(cur *float64, target, k float64) { *cur += (target - *cur) * k }
+	ease(&p.petX, p.s.X-p.facing*24, 0.12)
+	ease(&p.petY, p.s.Y+8, 0.12)
+	ease(&p.gizX, p.s.X+p.facing*28, 0.06)
+	ease(&p.gizY, p.s.Y-36, 0.06)
 }
 
 func (p *Play) updateJoystick(a *App) {
@@ -155,7 +180,16 @@ func (p *Play) updateRoom(a *App) {
 	}
 }
 
+// nearStation is the station the player can use right now, if any.
+func (p *Play) nearStation(a *App) *world.Station {
+	return a.Map.StationNear(p.box(), interactReach)
+}
+
 func (p *Play) interact(a *App) {
+	if st := p.nearStation(a); st != nil {
+		p.useStation(a, st)
+		return
+	}
 	d := a.Map.DoorNear(p.box(), interactReach)
 	if d == nil || !a.Map.DoorLocked(*d, p.isUnlocked) {
 		return
@@ -164,97 +198,11 @@ func (p *Play) interact(a *App) {
 	a.Say("gizmo", "gizmo.name", a.Tf("door.locked", r.Name, r.UnlockPrice))
 }
 
-func (p *Play) Draw(a *App, screen *ebiten.Image) {
-	m := a.Map
-	cx, cy := world.CameraFor(p.s.X, p.s.Y, float64(a.W), float64(a.H), m.Width, m.Height)
-
-	screen.Fill(ui.ColHallway)
-	for _, r := range m.Rooms {
-		c, _ := world.ParseHexColor(r.Color)
-		ui.Fill(screen, r.Bounds, cx, cy, ui.RGB(c))
-	}
-	for _, w := range m.Walls() {
-		ui.Fill(screen, w, cx, cy, ui.ColWall)
-	}
-	for _, r := range m.Rooms {
-		ui.Text(screen, r.Name, ui.Bold(ui.SizeBody), r.Bounds.X-cx+18, r.Bounds.Y-cy+16, color.RGBA{0, 0, 0, 0x70}, text.AlignStart)
-	}
-	for _, d := range m.Doors() {
-		if !m.DoorLocked(d, p.isUnlocked) {
-			continue
-		}
-		ui.Fill(screen, d.Rect, cx, cy, ui.ColLocked)
-		dx, dy := d.Rect.Center()
-		sx, sy := dx-cx-60, dy-cy-80 // badge up and away from the doorway
-		r := m.Room(d.RoomID)
-		ui.RoundRect(screen, geom.Centered(sx, sy, 76, 54), 10, ui.ColPanel, 2, ui.ColLocked)
-		ui.Padlock(screen, sx, sy-8, 14, ui.ColLocked)
-		ui.Diamond(screen, sx-14, sy+14, 6, ui.ColCrystal)
-		ui.Text(screen, fmt.Sprint(r.UnlockPrice), ui.Bold(ui.SizeSmall), sx-4, sy+5, ui.ColText, text.AlignStart)
-	}
-
-	// Player placeholder: round scientist with goggles (real avatar in M4).
-	sx, sy := p.s.X-cx, p.s.Y-cy
-	ui.Circle(screen, sx, sy, playerSize/2, ui.ColTextLight)
-	ui.Ring(screen, sx, sy, playerSize/2, 2, ui.ColAccent)
-	ui.Circle(screen, sx-4, sy-3, 3, ui.ColAccent)
-	ui.Circle(screen, sx+4, sy-3, 3, ui.ColAccent)
-
-	if p.s.Clock.IsNight() {
-		ui.Fill(screen, geom.Rect{W: float64(a.W), H: float64(a.H)}, 0, 0, ui.ColNight)
-	}
-	p.drawHUD(a, screen)
-}
-
-func (p *Play) drawHUD(a *App, screen *ebiten.Image) {
-	small, body := ui.Bold(ui.SizeSmall), ui.Bold(ui.SizeBody)
-	// Status pill: day, crystals, backpack.
-	ui.RoundRect(screen, geom.Rect{X: 8, Y: 8, W: 300, H: 40}, 20, ui.ColPanel, 2, ui.ColPanelLine)
-	if p.s.Clock.IsNight() {
-		ui.Circle(screen, 30, 28, 9, color.RGBA{0xf0, 0xe6, 0x8c, 0xff})
-		ui.Circle(screen, 34, 25, 8, ui.ColPanel) // crescent moon
-	} else {
-		ui.Circle(screen, 30, 28, 9, color.RGBA{0xff, 0xc8, 0x3c, 0xff})
-	}
-	ui.Text(screen, a.Tf("hud.day", p.s.Clock.Day()), body, 46, 17, ui.ColText, text.AlignStart)
-	ui.Diamond(screen, 134, 28, 10, ui.ColCrystal)
-	ui.Text(screen, fmt.Sprint(p.s.Wallet.Crystals()), body, 148, 17, ui.ColText, text.AlignStart)
-	ui.Text(screen, a.Tf("hud.bag", p.s.Backpack.UsedSlots(), p.s.Backpack.Slots()), body, 210, 17, ui.ColText, text.AlignStart)
-
-	for _, b := range []ui.Button{
-		{R: p.mapButton(a), Label: a.T("hud.map")},
-		{R: p.bagButton(a), Label: a.T("hud.bagButton")},
-		{R: p.pauseButton(a), Label: "II"},
-	} {
-		b.Draw(screen, false)
-	}
-
-	// Current room label, bottom-left, plus a warning if saving is broken.
-	ui.Text(screen, p.roomName(a), small, 14, float64(a.H)-28, ui.ColTextLight, text.AlignStart)
-	if a.SaveFailing() {
-		ui.Text(screen, a.T("save.failed"), small, 14, 56, ui.ColFocus, text.AlignStart)
-	}
-
-	if p.bannerT > 0 {
-		face := ui.Bold(ui.SizeHeading)
-		w := ui.Measure(p.banner, face) + 48
-		cx, _ := a.center()
-		r := geom.Centered(cx, 84, w, 44)
-		ui.Panel(screen, r)
-		ui.TextCentered(screen, p.banner, face, cx, 84, ui.ColText)
-	}
-
-	if a.Pointer.TouchDevice() {
-		if p.joy.Active() {
-			ox, oy := p.joy.Origin()
-			kx, ky := p.joy.Knob()
-			ui.Ring(screen, ox, oy, p.joy.Radius, 4, ui.ColPanel)
-			ui.Circle(screen, kx, ky, 22, ui.ColPanel)
-		}
-		u := p.useButton(a)
-		ux, uy := u.Center()
-		ui.Circle(screen, ux, uy, u.W/2, ui.ColPanel)
-		ui.Ring(screen, ux, uy, u.W/2, 3, ui.ColPanelLine)
-		ui.TextCentered(screen, a.T("hud.use"), body, ux, uy, ui.ColText)
+func (p *Play) useStation(a *App, st *world.Station) {
+	switch st.Kind {
+	case "wardrobe":
+		p.open(a, NewEditCreator(a))
+	default:
+		a.Say("gizmo", "gizmo.name", a.T("station.soon"))
 	}
 }

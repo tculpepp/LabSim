@@ -1,0 +1,50 @@
+{
+  "parts": [
+    {"id": "body", "name": "Body", "options": [
+      {"id": "round", "name": "Round"}, {"id": "tall", "name": "Tall"},
+      {"id": "small", "name": "Small"}, {"id": "strong", "name": "Strong"}]},
+    {"id": "skin", "name": "Skin", "options": [
+      {"id": "s1", "name": "Peach", "color": "#fbe0cc"}, {"id": "s2", "name": "Sand", "color": "#f1c7a0"},
+      {"id": "s3", "name": "Honey", "color": "#d9a271"}, {"id": "s4", "name": "Caramel", "color": "#b47a4c"},
+      {"id": "s5", "name": "Cocoa", "color": "#8a5634"}, {"id": "s6", "name": "Espresso", "color": "#5e3a22"}]},
+    {"id": "hair", "name": "Hair", "options": [
+      {"id": "short", "name": "Short"}, {"id": "long", "name": "Long"}, {"id": "curly", "name": "Curly"},
+      {"id": "ponytail", "name": "Ponytail"}, {"id": "bun", "name": "Bun"}, {"id": "spiky", "name": "Spiky"},
+      {"id": "bald", "name": "None"}]},
+    {"id": "hairColor", "name": "Hair Color", "options": [
+      {"id": "brown", "name": "Brown", "color": "#7a4a2a"}, {"id": "black", "name": "Black", "color": "#2b2222"},
+      {"id": "blonde", "name": "Blonde", "color": "#f2cf6b"}, {"id": "red", "name": "Red", "color": "#c8532e"},
+      {"id": "white", "name": "White", "color": "#eeeeee"}, {"id": "blue", "name": "Blue", "color": "#4f8df0"},
+      {"id": "pink", "name": "Pink", "color": "#f07ac0"}, {"id": "rainbow", "name": "Purple", "color": "#9b6af0", "price": 25}]},
+    {"id": "coat", "name": "Lab Coat", "options": [
+      {"id": "white", "name": "White", "color": "#ffffff"}, {"id": "blue", "name": "Blue", "color": "#8fc1ff"},
+      {"id": "pink", "name": "Pink", "color": "#ffb3d9"}, {"id": "green", "name": "Green", "color": "#a6e8a0"},
+      {"id": "purple", "name": "Purple", "color": "#c7a6ff", "price": 20},
+      {"id": "gold", "name": "Gold", "color": "#ffd84d", "price": 60}]},
+    {"id": "shirt", "name": "Shirt", "options": [
+      {"id": "teal", "name": "Teal", "color": "#3fb8af"}, {"id": "red", "name": "Red", "color": "#e8514a"},
+      {"id": "yellow", "name": "Yellow", "color": "#ffd23f"}, {"id": "navy", "name": "Navy", "color": "#2f4b8f"},
+      {"id": "orange", "name": "Orange", "color": "#ff9a3c"}]},
+    {"id": "shoes", "name": "Shoes", "options": [
+      {"id": "black", "name": "Black", "color": "#333333"}, {"id": "red", "name": "Red", "color": "#d8423a"},
+      {"id": "blue", "name": "Blue", "color": "#3a6fd8"}, {"id": "green", "name": "Green", "color": "#3aa858"},
+      {"id": "sparkle", "name": "Sparkle", "color": "#e080ff", "price": 30}]},
+    {"id": "pattern", "name": "Pattern", "options": [
+      {"id": "none", "name": "None"}, {"id": "stripes", "name": "Stripes"}, {"id": "dots", "name": "Dots"},
+      {"id": "stars", "name": "Stars", "price": 25}]},
+    {"id": "eyewear", "name": "Eyes", "options": [
+      {"id": "none", "name": "None"}, {"id": "goggles", "name": "Safety Goggles"}, {"id": "glasses", "name": "Glasses"},
+      {"id": "sunglasses", "name": "Sunglasses", "price": 30}]},
+    {"id": "hat", "name": "Hat", "options": [
+      {"id": "none", "name": "None"}, {"id": "beanie", "name": "Beanie"}, {"id": "cap", "name": "Cap"},
+      {"id": "party", "name": "Party Hat", "price": 20}, {"id": "tophat", "name": "Top Hat", "price": 40},
+      {"id": "crown", "name": "Crown", "price": 100}]},
+    {"id": "gear", "name": "Gear", "options": [
+      {"id": "none", "name": "None"}, {"id": "gloves", "name": "Gloves"},
+      {"id": "backpack", "name": "Backpack"}, {"id": "jetpack", "name": "Jetpack", "price": 80}]},
+    {"id": "pet", "name": "Pet", "options": [
+      {"id": "robot", "name": "Mini Robot"}, {"id": "cat", "name": "Lab Cat"},
+      {"id": "slime", "name": "Slime Buddy"}, {"id": "puppy", "name": "Puppy"},
+      {"id": "owl", "name": "Owl", "price": 60}, {"id": "dragon", "name": "Tiny Dragon", "price": 120}]}
+  ]
+}
