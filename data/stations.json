@@ -8,6 +8,7 @@
     {"id": "exp_gravity", "kind": "experiment", "room": "space_lab", "x": 1400, "y": 580, "w": 96, "h": 40},
     {"id": "wardrobe", "kind": "wardrobe", "room": "my_lab", "x": 690, "y": 965, "w": 44, "h": 56},
     {"id": "decorate", "kind": "decorate", "room": "my_lab", "x": 985, "y": 960, "w": 56, "h": 40},
+    {"id": "tank", "kind": "tank", "room": "greenhouse", "x": 380, "y": 1140, "w": 96, "h": 52},
     {"id": "workshop", "kind": "workshop", "room": "robot_workshop", "x": 1940, "y": 580, "w": 110, "h": 40}
   ]
 }

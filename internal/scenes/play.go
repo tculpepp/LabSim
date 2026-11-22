@@ -11,6 +11,7 @@ import (
 	"labsim/internal/geom"
 	"labsim/internal/input"
 	"labsim/internal/items"
+	"labsim/internal/npc"
 	"labsim/internal/state"
 	"labsim/internal/ui"
 	"labsim/internal/world"
@@ -44,6 +45,22 @@ type Play struct {
 	pickDay   int
 	floats    []floatText
 	fullWarnT int
+
+	animals  []*animal
+	hideJobs bool // job tracker collapsed
+	hearts   []heart
+}
+
+// animal is a wandering lab animal (C-4).
+type animal struct {
+	spec animalSpec
+	w    *npc.Wanderer
+}
+
+// heart floats up when you pet an animal (S-6).
+type heart struct {
+	x, y float64
+	t    int
 }
 
 // floatText is a little "+1 Star Dust" label that rises and fades.
@@ -67,7 +84,65 @@ func NewPlay(a *App) *Play {
 		p.roomID = r.ID
 	}
 	s.Room = p.roomID
+	p.spawnAnimals(a)
 	return p
+}
+
+func (p *Play) spawnAnimals(a *App) {
+	for i, sp := range a.Animals {
+		area := a.RoomRects[sp.Room].Expand(-40)
+		if sp.Kind == "axolotl" {
+			if st := a.Map.Station("tank"); st != nil {
+				area = st.Rect().Expand(-12)
+				area.Y += 6
+			}
+		}
+		p.animals = append(p.animals, &animal{spec: sp, w: npc.NewWanderer(area, uint64(i+1)*977, sp.Speed)})
+	}
+}
+
+func (p *Play) updateAnimals(a *App) {
+	for _, an := range p.animals {
+		switch an.spec.Kind {
+		case "butterfly", "axolotl": // flying / swimming: no walls to bump into
+			an.w.Update(func(float64, float64) bool { return true })
+		default:
+			an.w.Update(func(x, y float64) bool {
+				return !a.Map.Collides(geom.Centered(x, y, 20, 14), nil) &&
+					math.Hypot(x-p.s.X, y-p.s.Y) > 26 // don't walk into the player
+			})
+		}
+	}
+	kept := p.hearts[:0]
+	for _, h := range p.hearts {
+		if h.t++; h.t < floatTicks {
+			kept = append(kept, h)
+		}
+	}
+	p.hearts = kept
+}
+
+// nearAnimal is the closest pettable animal in reach.
+func (p *Play) nearAnimal() *animal {
+	var best *animal
+	bestD := 34.0
+	for _, an := range p.animals {
+		if an.spec.Kind == "axolotl" {
+			continue // in its tank; use the tank
+		}
+		if d := math.Hypot(an.w.X-p.s.X, an.w.Y-p.s.Y); d < bestD {
+			best, bestD = an, d
+		}
+	}
+	return best
+}
+
+func (p *Play) pet(a *App, kind string, x, y float64) {
+	for i := 0; i < 3; i++ {
+		p.hearts = append(p.hearts, heart{x: x - 10 + float64(i)*10, y: y - 20 - float64(i)*4, t: -i * 8})
+	}
+	p.float(a.T(animalKey(kind)), x, y-34, ui.ColTextLight)
+	a.Sound("pet")
 }
 
 func (p *Play) Opaque() bool { return true }
@@ -88,7 +163,7 @@ func (p *Play) useButton(a *App) geom.Rect {
 }
 
 func (p *Play) onButton(a *App, x, y float64) bool {
-	for _, r := range []geom.Rect{p.useButton(a), p.mapButton(a), p.bagButton(a), p.pauseButton(a)} {
+	for _, r := range []geom.Rect{p.useButton(a), p.mapButton(a), p.bagButton(a), p.pauseButton(a), p.trackerRect(a)} {
 		if r.Contains(x, y) {
 			return true
 		}
@@ -107,6 +182,7 @@ func (p *Play) Update(a *App) error {
 	p.t += dt.Seconds()
 	if p.s.Clock.Advance(dt) > 0 {
 		p.banner, p.bannerT = a.Tf("day.new", p.s.Clock.Day()), bannerTicks*2
+		a.SaveNow()
 	} else if p.bannerT > 0 {
 		p.bannerT--
 	}
@@ -124,6 +200,9 @@ func (p *Play) Update(a *App) error {
 		return nil
 	}
 
+	if inpututil.IsKeyJustPressed(ebiten.KeyJ) || a.Pointer.TapIn(p.trackerRect(a)) {
+		p.hideJobs = !p.hideJobs
+	}
 	p.updateJoystick(a)
 	dx, dy := input.KeyVector(
 		ebiten.IsKeyPressed(ebiten.KeyArrowLeft) || ebiten.IsKeyPressed(ebiten.KeyA),
@@ -141,6 +220,7 @@ func (p *Play) Update(a *App) error {
 		p.facing = math.Copysign(1, dx)
 	}
 	p.updateFollowers()
+	p.updateAnimals(a)
 	p.updateRoom(a)
 	p.refreshPickups(a)
 	p.grab(a)
@@ -214,6 +294,10 @@ func (p *Play) interact(a *App) {
 		p.useStation(a, st)
 		return
 	}
+	if an := p.nearAnimal(); an != nil {
+		p.pet(a, an.spec.Kind, an.w.X, an.w.Y)
+		return
+	}
 	d := a.Map.DoorNear(p.box(), interactReach)
 	if d == nil || !a.Map.DoorLocked(*d, p.isUnlocked) {
 		return
@@ -223,7 +307,21 @@ func (p *Play) interact(a *App) {
 }
 
 func (p *Play) useStation(a *App, st *world.Station) {
+	if j, reward, ok := a.TryDeliver(st.ID); ok {
+		p.float(a.Tf("job.paid", reward), st.X, st.Y-40, ui.ColFocus)
+		who, name := "gizmo", "gizmo.name"
+		if st.ID == "nova" {
+			who, name = "nova", "nova.name"
+		}
+		a.Say(who, name, a.Tf("job.delivered", j.Title, reward))
+		p.afterPay(a)
+		return
+	}
 	switch st.Kind {
+	case "npc":
+		a.TalkToNova()
+	case "tank":
+		p.pet(a, "axolotl", st.X, st.Y-10)
 	case "wardrobe":
 		p.open(a, NewEditCreator(a))
 	case "shop":
@@ -280,3 +378,27 @@ func (p *Play) tickFloats() {
 	}
 	p.floats = kept
 }
+
+// afterPay shows Gizmo's tutorial tip the first time you get paid.
+func (p *Play) afterPay(a *App) {
+	if !a.State.Flag("tut.paid") {
+		a.State.SetFlag("tut.paid")
+		a.Say("gizmo", "gizmo.name", a.T("tut.paid"))
+	}
+}
+
+// jobTarget is where Gizmo's arrow points: Dr. Nova if you have no jobs
+// yet, otherwise the station for your next job (C-3).
+func (p *Play) jobTarget(a *App) *world.Station {
+	b := a.Board()
+	if b == nil {
+		return a.Map.Station("nova")
+	}
+	for _, j := range b.Open() {
+		return a.Map.Station(j.Station)
+	}
+	return nil
+}
+
+// animalKey is the text key for petting an animal (checked by TestAnimalTexts).
+func animalKey(kind string) string { return "animal." + kind }

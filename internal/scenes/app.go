@@ -14,6 +14,7 @@ import (
 	"labsim/internal/content"
 	"labsim/internal/geom"
 	"labsim/internal/items"
+	"labsim/internal/jobs"
 	"labsim/internal/names"
 	"labsim/internal/save"
 	"labsim/internal/stack"
@@ -42,6 +43,9 @@ type App struct {
 	Items      *items.Catalog
 	Spawns     []items.Rule
 	RoomRects  map[string]geom.Rect
+	JobPool    *jobs.Pool
+	Supply     map[string]int // items spawned per day
+	Animals    []animalSpec
 	Pointer    ui.Pointer
 
 	// State is the current game, nil on the title screen.
@@ -95,6 +99,12 @@ func NewApp(store save.Store) (*App, error) {
 	}
 	a := &App{W: 720, H: geom.LogicalH, Map: m, Text: txt, Avatars: av, Names: nb,
 		Items: ic, Spawns: rules, RoomRects: rooms, Store: store, Codec: save.DefaultCodec()}
+	if err := a.loadJobs(); err != nil {
+		return nil, fmt.Errorf("load jobs: %w", err)
+	}
+	if err := a.loadAnimals(); err != nil {
+		return nil, fmt.Errorf("load animals: %w", err)
+	}
 	a.autosave = save.NewAutosaver(autosaveInterval, a.writeSave)
 	a.checkSave()
 	a.scenes.Push(NewTitle(a))

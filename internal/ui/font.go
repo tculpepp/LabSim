@@ -75,3 +75,11 @@ func Lines(dst *ebiten.Image, lines []string, face text.Face, size, x, y float64
 		Text(dst, l, face, x, y+float64(i)*LineHeight(size), c, align)
 	}
 }
+
+// TextOutlined draws centered text with a dark outline so it reads on any floor.
+func TextOutlined(dst *ebiten.Image, s string, face text.Face, cx, cy float64, c, outline color.Color) {
+	for _, d := range [][2]float64{{-1.5, 0}, {1.5, 0}, {0, -1.5}, {0, 1.5}, {1.2, 1.2}, {-1.2, 1.2}, {1.2, -1.2}, {-1.2, -1.2}} {
+		TextCentered(dst, s, face, cx+d[0], cy+d[1], outline)
+	}
+	TextCentered(dst, s, face, cx, cy, c)
+}

@@ -72,7 +72,14 @@ func (d *Dialog) Draw(a *App, screen *ebiten.Image) {
 	d.wrap(a)
 	b := d.box(a)
 	ui.Panel(screen, b)
-	ui.Portrait(screen, d.who, b.X+64, b.Y+b.H/2+6, 40)
+	px, py := b.X+64, b.Y+b.H/2+6
+	ui.Portrait(screen, d.who, px, py, 40)
+	switch d.who {
+	case "nova":
+		ui.DrawNova(screen, a.Avatars, px, py+50, 2)
+	case "tom":
+		ui.DrawTom(screen, a.Avatars, px, py+58, 1.8, 0)
+	}
 	tx := b.X + 128
 	ui.Text(screen, d.name, ui.Bold(ui.SizeBody), tx, b.Y+12, ui.ColAccent, text.AlignStart)
 	ui.Lines(screen, d.pages[d.page], ui.Regular(ui.SizeBody), ui.SizeBody, tx, b.Y+38, ui.ColText, text.AlignStart)

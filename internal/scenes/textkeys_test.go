@@ -47,3 +47,12 @@ func TestStationLabels(t *testing.T) {
 		}
 	}
 }
+
+func TestAnimalTexts(t *testing.T) {
+	a := newApp(t, &save.MemStore{})
+	for _, an := range a.Animals {
+		if !a.Text.Has(animalKey(an.Kind)) {
+			t.Errorf("animal %q has no %q text", an.Kind, animalKey(an.Kind))
+		}
+	}
+}

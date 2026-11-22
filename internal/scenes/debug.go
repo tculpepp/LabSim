@@ -62,6 +62,29 @@ func (a *App) DebugScene(name string) error {
 			p.s.Backpack.Add(id, 2)
 		}
 		a.Push(NewInventory(p.s.Backpack))
+	case "nova-jobs":
+		p := play()
+		p.s.X, p.s.Y = 840, 210
+		a.TalkToNova()
+	case "hall":
+		p := play()
+		for i := 0; i < 200; i++ {
+			p.updateAnimals(a)
+		}
+		p.s.X, p.s.Y = 760, 640
+		a.State.GiveJobs([]string{"dust_nova", "rock_gravity", "battery_circuit"})
+		a.State.MarkJobDone("dust_nova")
+		a.State.Backpack.Add("battery", 1)
+	case "greenhouse":
+		p := play()
+		p.s.X, p.s.Y = 300, 1130
+		for i := 0; i < 100; i++ {
+			p.updateAnimals(a)
+		}
+		p.pet(a, "axolotl", 380, 1130)
+		for i := range p.hearts {
+			p.hearts[i].t = 12
+		}
 	case "storage":
 		p := play()
 		p.s.X, p.s.Y = 1400, 1150

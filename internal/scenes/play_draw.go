@@ -9,6 +9,7 @@ import (
 	"github.com/hajimehoshi/ebiten/v2"
 	"github.com/hajimehoshi/ebiten/v2/text/v2"
 
+	"labsim/internal/content"
 	"labsim/internal/geom"
 	"labsim/internal/ui"
 	"labsim/internal/world"
@@ -58,6 +59,15 @@ func (p *Play) Draw(a *App, screen *ebiten.Image) {
 			}
 		}})
 	}
+	for _, an := range p.animals {
+		an := an
+		if an.spec.Kind == "axolotl" {
+			continue // drawn inside its tank
+		}
+		sprites = append(sprites, sprite{an.w.Y, func() {
+			ui.DrawAnimal(screen, an.spec.Kind, an.w.X-cx, an.w.Y-cy, 1, p.t, an.w.Facing, an.w.Moving)
+		}})
+	}
 	feetY := p.s.Y + playerSize/2
 	sprites = append(sprites,
 		sprite{feetY, func() {
@@ -76,17 +86,26 @@ func (p *Play) Draw(a *App, screen *ebiten.Image) {
 		s.draw()
 	}
 	ui.DrawGizmo(screen, p.gizX-cx, p.gizY-cy, 0.9, p.t)
+	p.drawJobArrow(a, screen, cx, cy)
+	for _, h := range p.hearts {
+		if h.t >= 0 {
+			ui.Heart(screen, h.x-cx, h.y-cy-float64(h.t)*0.6, 10)
+		}
+	}
 	for _, f := range p.floats {
 		alpha := 1 - float64(f.t)/floatTicks
 		c := color.RGBA{0xff, 0xff, 0xff, uint8(255 * alpha)}
 		if rgba, ok := f.col.(color.RGBA); ok {
 			c = color.RGBA{uint8(float64(rgba.R) * alpha), uint8(float64(rgba.G) * alpha), uint8(float64(rgba.B) * alpha), uint8(255 * alpha)}
 		}
-		ui.TextCentered(screen, f.text, ui.Bold(ui.SizeBody), f.x-cx, f.y-cy-float64(f.t)*0.5, c)
+		fx, fy := f.x-cx, f.y-cy-float64(f.t)*0.5
+		ui.TextOutlined(screen, f.text, ui.Bold(ui.SizeBody), fx, fy, c, color.RGBA{0x22, 0x26, 0x33, uint8(220 * alpha)})
 	}
 
 	if st := p.nearStation(a); st != nil {
 		p.drawPrompt(a, screen, a.T(stationKey(st.ID)), st.X-cx, st.Y-st.H/2-cy-46)
+	} else if an := p.nearAnimal(); an != nil {
+		p.drawPrompt(a, screen, a.T("animal.pet"), an.w.X-cx, an.w.Y-cy-40)
 	}
 
 	if p.s.Clock.IsNight() {
@@ -164,6 +183,13 @@ func (p *Play) drawStation(a *App, screen *ebiten.Image, st world.Station, cx, c
 		for i, c := range []string{"#ffe27a", "#7ad0ff", "#ff7ac8"} {
 			ui.RoundRect(screen, geom.Rect{X: r.X + 10 + float64(i)*12, Y: r.Y - 6, W: 9, H: 12}, 3, ui.Hex(c), 1, ui.ColWall)
 		}
+	case "tank":
+		ui.Tank(screen, r, p.t)
+		for _, an := range p.animals {
+			if an.spec.Kind == "axolotl" {
+				ui.DrawAnimal(screen, "axolotl", an.w.X-cx, an.w.Y-cy, 1, p.t, an.w.Facing, an.w.Moving)
+			}
+		}
 	case "wardrobe":
 		ui.RoundRect(screen, r, 5, ui.Hex("#c08a5a"), 2, ui.Hex("#8d6040"))
 		ui.RoundRect(screen, geom.Rect{X: r.X + 8, Y: r.Y + 6, W: r.W - 16, H: r.H - 14}, 10, ui.Hex("#cfeeff"), 2, ui.Hex("#8d6040"))
@@ -212,3 +238,25 @@ func drawBenchProps(screen *ebiten.Image, id string, r geom.Rect, t float64) {
 
 // stationKey is the text key for a station's label (checked by TestStationLabels).
 func stationKey(id string) string { return "station." + id }
+
+// drawJobArrow: Gizmo points the way to your next job (C-3). Juniors always
+// get the arrow; Experts only on their first day (D-2: fewer hints).
+func (p *Play) drawJobArrow(a *App, screen *ebiten.Image, cx, cy float64) {
+	if a.Level() == content.Expert && p.s.Clock.Day() > 1 {
+		return
+	}
+	st := p.jobTarget(a)
+	if st == nil {
+		return
+	}
+	dx, dy := st.X-p.s.X, st.Y-p.s.Y
+	d := math.Hypot(dx, dy)
+	if d < 110 {
+		return
+	}
+	ux, uy := dx/d, dy/d
+	pulse := 4 * math.Sin(p.t*5)
+	tipX, tipY := p.s.X-cx+ux*(52+pulse), p.s.Y-cy+uy*(52+pulse)
+	backX, backY := tipX-ux*16, tipY-uy*16
+	ui.Poly(screen, ui.Hex("#9ad8ff"), tipX, tipY, backX-uy*9, backY+ux*9, backX+uy*9, backY-ux*9)
+}

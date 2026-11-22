@@ -35,6 +35,10 @@ type State struct {
 
 	pickedDay int
 	picked    map[string]bool // pickups grabbed today (I-4: everything respawns each day)
+
+	jobsDay  int
+	jobs     []string
+	jobsDone map[string]bool
 }
 
 // New starts a fresh scientist at (x, y).
@@ -49,6 +53,7 @@ func New(name string, lvl content.Level, x, y float64) *State {
 		flags:    map[string]bool{},
 		owned:    map[string]bool{},
 		picked:   map[string]bool{},
+		jobsDone: map[string]bool{},
 	}
 }
 
@@ -68,6 +73,34 @@ func (s *State) MarkPicked(key string) {
 func (s *State) Picked(key string) bool {
 	s.syncPicked()
 	return s.picked[key]
+}
+
+// TodaysJobs returns the job IDs Dr. Nova gave out today; ok is false if
+// the player hasn't visited her yet today.
+func (s *State) TodaysJobs() ([]string, bool) {
+	if s.jobsDay != s.Clock.Day() {
+		return nil, false
+	}
+	return s.jobs, true
+}
+
+// GiveJobs records today's jobs.
+func (s *State) GiveJobs(ids []string) {
+	s.jobsDay, s.jobs, s.jobsDone = s.Clock.Day(), ids, map[string]bool{}
+}
+
+func (s *State) MarkJobDone(id string) { s.jobsDone[id] = true }
+
+func (s *State) JobDone(id string) bool {
+	return s.jobsDay == s.Clock.Day() && s.jobsDone[id]
+}
+
+// DoneJobs lists today's finished job IDs.
+func (s *State) DoneJobs() []string {
+	if s.jobsDay != s.Clock.Day() {
+		return nil
+	}
+	return keys(s.jobsDone)
 }
 
 func (s *State) syncPicked() {
@@ -107,6 +140,9 @@ func (s *State) Snapshot() save.Data {
 		Owned:         keys(s.owned),
 		PickedDay:     s.pickedDay,
 		Picked:        keys(s.picked),
+		JobsDay:       s.jobsDay,
+		Jobs:          s.jobs,
+		JobsDone:      keys(s.jobsDone),
 	}
 }
 
@@ -134,6 +170,10 @@ func FromSave(d save.Data) (*State, error) {
 	}
 	for k, v := range d.Avatar {
 		s.Avatar[k] = v
+	}
+	s.jobsDay, s.jobs = d.JobsDay, d.Jobs
+	for _, id := range d.JobsDone {
+		s.jobsDone[id] = true
 	}
 	if d.PickedDay == s.Clock.Day() {
 		s.pickedDay = d.PickedDay

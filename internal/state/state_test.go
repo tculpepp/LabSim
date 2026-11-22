@@ -122,3 +122,28 @@ func TestPickedResetsOnNewDay(t *testing.T) {
 		t.Fatal("picked list should reset on a new day")
 	}
 }
+
+func TestJobsForToday(t *testing.T) {
+	s := New("x", content.Junior, 0, 0)
+	if _, ok := s.TodaysJobs(); ok {
+		t.Fatal("no jobs before visiting Dr. Nova")
+	}
+	s.GiveJobs([]string{"a", "b"})
+	s.MarkJobDone("a")
+	ids, ok := s.TodaysJobs()
+	if !ok || len(ids) != 2 || !s.JobDone("a") || s.JobDone("b") {
+		t.Fatalf("jobs = %v ok=%v", ids, ok)
+	}
+	d := s.Snapshot()
+	r, _ := FromSave(d)
+	if ids, ok := r.TodaysJobs(); !ok || len(ids) != 2 || !r.JobDone("a") {
+		t.Fatal("jobs not saved")
+	}
+	s.Clock.Advance(DayLength)
+	if _, ok := s.TodaysJobs(); ok {
+		t.Fatal("yesterday's jobs should expire")
+	}
+	if s.JobDone("a") {
+		t.Fatal("done marks should expire with the jobs")
+	}
+}

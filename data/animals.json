@@ -1,0 +1,9 @@
+{
+  "animals": [
+    {"id": "bunny", "kind": "bunny", "room": "main_hall", "speed": 1.4},
+    {"id": "hamster", "kind": "hamster", "room": "office", "speed": 1.0},
+    {"id": "butterfly1", "kind": "butterfly", "room": "greenhouse", "speed": 1.1},
+    {"id": "butterfly2", "kind": "butterfly", "room": "greenhouse", "speed": 0.9},
+    {"id": "axolotl", "kind": "axolotl", "room": "greenhouse", "speed": 0.5}
+  ]
+}

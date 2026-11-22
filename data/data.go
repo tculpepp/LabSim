@@ -23,3 +23,9 @@ var Items []byte
 
 //go:embed spawns.json
 var Spawns []byte
+
+//go:embed jobs.json
+var Jobs []byte
+
+//go:embed animals.json
+var Animals []byte
