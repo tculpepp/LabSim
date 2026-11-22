@@ -11,7 +11,7 @@ import (
 )
 
 // Every text key used in scene code must exist in data/text.json.
-var keyRe = regexp.MustCompile(`\.(?:T|Tf)\("([^"]+)"|\.Say\("[^"]+", "([^"]+)"`)
+var keyRe = regexp.MustCompile(`\.(?:T|Tf|Confirm)\("([^"]+)"|\.Say\("[^"]+", "([^"]+)"|notice(?:,? [^=]*)?= (?:nil, )?"([^"]+)"`)
 
 func TestAllTextKeysExist(t *testing.T) {
 	cat, err := content.Load(data.Text)
@@ -26,7 +26,7 @@ func TestAllTextKeysExist(t *testing.T) {
 			t.Fatal(err)
 		}
 		for _, m := range keyRe.FindAllStringSubmatch(string(src), -1) {
-			key := m[1] + m[2]
+			key := m[1] + m[2] + m[3]
 			found++
 			if !cat.Has(key) {
 				t.Errorf("%s uses missing text key %q", f, key)

@@ -9,11 +9,9 @@ import (
 	"github.com/hajimehoshi/ebiten/v2/inpututil"
 	"github.com/hajimehoshi/ebiten/v2/text/v2"
 
-	"labsim/internal/clock"
-	"labsim/internal/economy"
 	"labsim/internal/geom"
 	"labsim/internal/input"
-	"labsim/internal/inventory"
+	"labsim/internal/state"
 	"labsim/internal/ui"
 	"labsim/internal/world"
 )
@@ -22,18 +20,13 @@ const (
 	playerSize    = 24.0
 	playerSpeed   = 3.0 // logical px per tick at full stick
 	interactReach = 20.0
-	dayLength     = 10 * time.Minute
 	bannerTicks   = 120
 )
 
 // Play is the main walking-around-the-lab scene.
 type Play struct {
-	px, py   float64
-	unlocked map[string]bool
-	clock    *clock.Clock
-	wallet   *economy.Wallet
-	backpack *inventory.Backpack
-	joy      *input.Joystick
+	s   *state.State
+	joy *input.Joystick
 
 	roomID  string
 	banner  string
@@ -41,23 +34,19 @@ type Play struct {
 }
 
 func NewPlay(a *App) *Play {
-	return &Play{
-		px:       a.Map.Spawn.X,
-		py:       a.Map.Spawn.Y,
-		unlocked: map[string]bool{},
-		clock:    clock.New(dayLength),
-		wallet:   economy.NewWallet(0),
-		backpack: inventory.NewBackpack(6),
-		joy:      input.NewJoystick(50, 8),
-		roomID:   "main_hall",
+	p := &Play{s: a.State, joy: input.NewJoystick(50, 8)}
+	if r := a.Map.RoomAt(p.s.X, p.s.Y); r != nil {
+		p.roomID = r.ID
 	}
+	p.s.Room = p.roomID
+	return p
 }
 
 func (p *Play) Opaque() bool { return true }
 
-func (p *Play) isUnlocked(id string) bool { return p.unlocked[id] }
+func (p *Play) isUnlocked(id string) bool { return p.s.IsUnlocked(id) }
 
-func (p *Play) box() geom.Rect { return geom.Centered(p.px, p.py, playerSize, playerSize) }
+func (p *Play) box() geom.Rect { return geom.Centered(p.s.X, p.s.Y, playerSize, playerSize) }
 
 // HUD buttons (screen space), right to left: pause, bag, map.
 func (p *Play) hudButton(a *App, i int) geom.Rect {
@@ -80,12 +69,13 @@ func (p *Play) onButton(a *App, x, y float64) bool {
 }
 
 func (p *Play) Update(a *App) error {
-	days := p.clock.Advance(time.Second / time.Duration(ebiten.TPS()))
-	if days > 0 {
-		p.banner, p.bannerT = a.Tf("day.new", p.clock.Day()), bannerTicks*2
+	dt := time.Second / time.Duration(ebiten.TPS())
+	if p.s.Clock.Advance(dt) > 0 {
+		p.banner, p.bannerT = a.Tf("day.new", p.s.Clock.Day()), bannerTicks*2
 	} else if p.bannerT > 0 {
 		p.bannerT--
 	}
+	a.autosave.Tick(dt)
 
 	switch {
 	case inpututil.IsKeyJustPressed(ebiten.KeyM) || a.Pointer.TapIn(p.mapButton(a)):
@@ -94,7 +84,7 @@ func (p *Play) Update(a *App) error {
 		return nil
 	case inpututil.IsKeyJustPressed(ebiten.KeyI) || inpututil.IsKeyJustPressed(ebiten.KeyB) || a.Pointer.TapIn(p.bagButton(a)):
 		p.joy.End(p.joy.ID())
-		a.Push(NewInventory(p.backpack))
+		a.Push(NewInventory(p.s.Backpack))
 		return nil
 	case inpututil.IsKeyJustPressed(ebiten.KeyEscape) || inpututil.IsKeyJustPressed(ebiten.KeyP) || a.Pointer.TapIn(p.pauseButton(a)):
 		p.joy.End(p.joy.ID())
@@ -113,7 +103,7 @@ func (p *Play) Update(a *App) error {
 		dx, dy = p.joy.Vector()
 	}
 	nb := a.Map.Move(p.box(), dx*playerSpeed, dy*playerSpeed, p.isUnlocked)
-	p.px, p.py = nb.Center()
+	p.s.X, p.s.Y = nb.Center()
 	p.updateRoom(a)
 
 	if inpututil.IsKeyJustPressed(ebiten.KeyE) || inpututil.IsKeyJustPressed(ebiten.KeySpace) ||
@@ -152,11 +142,13 @@ func (p *Play) roomName(a *App) string {
 
 func (p *Play) updateRoom(a *App) {
 	id := ""
-	if r := a.Map.RoomAt(p.px, p.py); r != nil {
+	if r := a.Map.RoomAt(p.s.X, p.s.Y); r != nil {
 		id = r.ID
 	}
 	if id != p.roomID {
 		p.roomID = id
+		p.s.Room = id
+		a.SaveNow() // SV-1: save on room change
 		if id != "" {
 			p.banner, p.bannerT = p.roomName(a), bannerTicks
 		}
@@ -174,7 +166,7 @@ func (p *Play) interact(a *App) {
 
 func (p *Play) Draw(a *App, screen *ebiten.Image) {
 	m := a.Map
-	cx, cy := world.CameraFor(p.px, p.py, float64(a.W), float64(a.H), m.Width, m.Height)
+	cx, cy := world.CameraFor(p.s.X, p.s.Y, float64(a.W), float64(a.H), m.Width, m.Height)
 
 	screen.Fill(ui.ColHallway)
 	for _, r := range m.Rooms {
@@ -202,13 +194,13 @@ func (p *Play) Draw(a *App, screen *ebiten.Image) {
 	}
 
 	// Player placeholder: round scientist with goggles (real avatar in M4).
-	sx, sy := p.px-cx, p.py-cy
+	sx, sy := p.s.X-cx, p.s.Y-cy
 	ui.Circle(screen, sx, sy, playerSize/2, ui.ColTextLight)
 	ui.Ring(screen, sx, sy, playerSize/2, 2, ui.ColAccent)
 	ui.Circle(screen, sx-4, sy-3, 3, ui.ColAccent)
 	ui.Circle(screen, sx+4, sy-3, 3, ui.ColAccent)
 
-	if p.clock.IsNight() {
+	if p.s.Clock.IsNight() {
 		ui.Fill(screen, geom.Rect{W: float64(a.W), H: float64(a.H)}, 0, 0, ui.ColNight)
 	}
 	p.drawHUD(a, screen)
@@ -218,16 +210,16 @@ func (p *Play) drawHUD(a *App, screen *ebiten.Image) {
 	small, body := ui.Bold(ui.SizeSmall), ui.Bold(ui.SizeBody)
 	// Status pill: day, crystals, backpack.
 	ui.RoundRect(screen, geom.Rect{X: 8, Y: 8, W: 300, H: 40}, 20, ui.ColPanel, 2, ui.ColPanelLine)
-	if p.clock.IsNight() {
+	if p.s.Clock.IsNight() {
 		ui.Circle(screen, 30, 28, 9, color.RGBA{0xf0, 0xe6, 0x8c, 0xff})
 		ui.Circle(screen, 34, 25, 8, ui.ColPanel) // crescent moon
 	} else {
 		ui.Circle(screen, 30, 28, 9, color.RGBA{0xff, 0xc8, 0x3c, 0xff})
 	}
-	ui.Text(screen, a.Tf("hud.day", p.clock.Day()), body, 46, 17, ui.ColText, text.AlignStart)
+	ui.Text(screen, a.Tf("hud.day", p.s.Clock.Day()), body, 46, 17, ui.ColText, text.AlignStart)
 	ui.Diamond(screen, 134, 28, 10, ui.ColCrystal)
-	ui.Text(screen, fmt.Sprint(p.wallet.Crystals()), body, 148, 17, ui.ColText, text.AlignStart)
-	ui.Text(screen, a.Tf("hud.bag", p.backpack.UsedSlots(), p.backpack.Slots()), body, 210, 17, ui.ColText, text.AlignStart)
+	ui.Text(screen, fmt.Sprint(p.s.Wallet.Crystals()), body, 148, 17, ui.ColText, text.AlignStart)
+	ui.Text(screen, a.Tf("hud.bag", p.s.Backpack.UsedSlots(), p.s.Backpack.Slots()), body, 210, 17, ui.ColText, text.AlignStart)
 
 	for _, b := range []ui.Button{
 		{R: p.mapButton(a), Label: a.T("hud.map")},
@@ -237,8 +229,11 @@ func (p *Play) drawHUD(a *App, screen *ebiten.Image) {
 		b.Draw(screen, false)
 	}
 
-	// Current room label, bottom-left.
+	// Current room label, bottom-left, plus a warning if saving is broken.
 	ui.Text(screen, p.roomName(a), small, 14, float64(a.H)-28, ui.ColTextLight, text.AlignStart)
+	if a.SaveFailing() {
+		ui.Text(screen, a.T("save.failed"), small, 14, 56, ui.ColFocus, text.AlignStart)
+	}
 
 	if p.bannerT > 0 {
 		face := ui.Bold(ui.SizeHeading)

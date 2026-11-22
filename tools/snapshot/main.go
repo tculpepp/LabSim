@@ -14,6 +14,7 @@ import (
 
 	"github.com/hajimehoshi/ebiten/v2"
 
+	"labsim/internal/save"
 	"labsim/internal/scenes"
 )
 
@@ -61,7 +62,7 @@ func main() {
 	if flag.NArg() != 1 {
 		log.Fatal("usage: snapshot [-scene name] <out.png>")
 	}
-	app, err := scenes.NewApp()
+	app, err := scenes.NewApp(&save.MemStore{})
 	if err != nil {
 		log.Fatal(err)
 	}

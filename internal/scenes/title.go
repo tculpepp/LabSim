@@ -2,6 +2,7 @@ package scenes
 
 import (
 	"image/color"
+	"log"
 
 	"github.com/hajimehoshi/ebiten/v2"
 	"github.com/hajimehoshi/ebiten/v2/text/v2"
@@ -21,7 +22,20 @@ type Title struct {
 
 func NewTitle(a *App) *Title {
 	t := &Title{}
-	t.addButton(a.T("title.new"), func(a *App) { a.Replace(NewCreator(a)) })
+	if a.HasSave() {
+		t.addButton(a.T("title.continue"), func(a *App) {
+			if err := a.ContinueGame(); err != nil {
+				log.Printf("continue: %v", err)
+				a.saved, a.notice = nil, "title.corrupt"
+				a.Replace(NewTitle(a))
+			}
+		})
+		t.addButton(a.T("title.new"), func(a *App) {
+			a.Confirm("confirm.newOverwrite", func(a *App) { a.Replace(NewCreator(a)) })
+		})
+	} else {
+		t.addButton(a.T("title.new"), func(a *App) { a.Replace(NewCreator(a)) })
+	}
 	return t
 }
 
@@ -60,6 +74,10 @@ func (t *Title) Draw(a *App, screen *ebiten.Image) {
 	tag := ui.Wrap(a.T("title.tagline"), ui.Regular(ui.SizeBody), float64(a.W)-80)
 	ui.Lines(screen, tag, ui.Regular(ui.SizeBody), ui.SizeBody, cx, 222, ui.ColTextLight, text.AlignCenter)
 	t.menu.Draw(screen)
+	if a.notice != "" {
+		lines := ui.Wrap(a.T(a.notice), ui.Regular(ui.SizeSmall), float64(a.W)-80)
+		ui.Lines(screen, lines, ui.Regular(ui.SizeSmall), ui.SizeSmall, cx, float64(a.H)-60, ui.ColFocus, text.AlignCenter)
+	}
 }
 
 // Creator is the avatar creator. M2 stub: pick difficulty only; full creator is M4.
@@ -117,11 +135,4 @@ func (c *Creator) Draw(a *App, screen *ebiten.Image) {
 		lines := ui.Wrap(d, ui.Regular(ui.SizeSmall), r.W)
 		ui.Lines(screen, lines, ui.Regular(ui.SizeSmall), ui.SizeSmall, r.X+r.W/2, r.Y+r.H+14, ui.ColTextLight, text.AlignCenter)
 	}
-}
-
-// StartNewGame begins play with a fresh scientist.
-func (a *App) StartNewGame(name string, lvl content.Level) {
-	a.PlayerName, a.Level = name, lvl
-	a.Replace(NewPlay(a))
-	a.Say("gizmo", "gizmo.name", a.Tf("gizmo.welcome", name))
 }

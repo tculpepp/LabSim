@@ -169,7 +169,7 @@ func (mv *MapView) Draw(a *App, screen *ebiten.Image) {
 			ui.Padlock(screen, rr.X+rr.W-14, rr.Y+16, 14, ui.ColLocked)
 		}
 	}
-	px, py := ox+p.px*scale, oy+p.py*scale
+	px, py := ox+p.s.X*scale, oy+p.s.Y*scale
 	ui.Circle(screen, px, py, 7, ui.ColAccent)
 	ui.Ring(screen, px, py, 7, 2, ui.ColTextLight)
 	ui.Text(screen, a.T("map.you"), ui.Bold(ui.SizeSmall), px+10, py-8, ui.ColTextLight, text.AlignStart)
@@ -186,6 +186,9 @@ type Pause struct {
 func NewPause(a *App) *Pause {
 	p := &Pause{}
 	p.add(a.T("pause.resume"), func(a *App) { a.Pop() })
+	p.add(a.T("pause.startover"), func(a *App) {
+		a.Confirm("confirm.startOver", func(a *App) { a.StartOver() })
+	})
 	return p
 }
 
@@ -229,4 +232,61 @@ func (p *Pause) Draw(a *App, screen *ebiten.Image) {
 	cx, _ := r.Center()
 	ui.TextCentered(screen, a.T("pause.title"), ui.Bold(ui.SizeHeading), cx, r.Y+40, ui.ColText)
 	p.menu.Draw(screen)
+}
+
+// ---- Confirm ----
+
+// Confirm asks a yes/no question. "No" is focused by default so a stray
+// Enter press never deletes anything.
+type Confirm struct {
+	question string
+	onYes    func(a *App)
+	menu     ui.Menu
+}
+
+func NewConfirm(a *App, questionKey string, onYes func(a *App)) *Confirm {
+	c := &Confirm{question: a.T(questionKey), onYes: onYes}
+	c.menu.Buttons = []ui.Button{{Label: a.T("confirm.no")}, {Label: a.T("confirm.yes")}}
+	return c
+}
+
+func (c *Confirm) Opaque() bool { return false }
+
+func (c *Confirm) panel(a *App) geom.Rect {
+	cx, cy := a.center()
+	return geom.Centered(cx, cy, min(float64(a.W)-40, 520), 200)
+}
+
+func (c *Confirm) layout(a *App) {
+	r := c.panel(a)
+	cx, _ := r.Center()
+	c.menu.Buttons[0].R = geom.Centered(cx-120, r.Y+r.H-50, 210, 50)
+	c.menu.Buttons[1].R = geom.Centered(cx+120, r.Y+r.H-50, 210, 50)
+}
+
+func (c *Confirm) Update(a *App) error {
+	c.layout(a)
+	if closePressed() {
+		a.Pop()
+		return nil
+	}
+	switch c.menu.Update(&a.Pointer) {
+	case 0:
+		a.Pop()
+	case 1:
+		a.Pop()
+		c.onYes(a)
+	}
+	return nil
+}
+
+func (c *Confirm) Draw(a *App, screen *ebiten.Image) {
+	c.layout(a)
+	ui.Shade(screen, a.W, a.H)
+	r := c.panel(a)
+	ui.Panel(screen, r)
+	cx, _ := r.Center()
+	lines := ui.Wrap(c.question, ui.Bold(ui.SizeBody), r.W-60)
+	ui.Lines(screen, lines, ui.Bold(ui.SizeBody), ui.SizeBody, cx, r.Y+36, ui.ColText, text.AlignCenter)
+	c.menu.Draw(screen)
 }

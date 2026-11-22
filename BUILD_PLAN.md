@@ -15,21 +15,21 @@ Existing pieces to reuse: `economy.Wallet`, `inventory.Backpack`, `clock.Clock`,
 
 **M0: Foundations ✅ (done)**
 Go module, wallet, backpack, day clock, job board (all tested), Ebitengine placeholder walk, WASM build, PWA manifest and service worker, icon generator, dev server.
-Remaining: `git init` and a first commit (after the user confirms the diff).
 
-**M1: World, movement, controls**
+
+**M1: World, movement, controls ✅ (v0.2.0)**
 - `internal/world`: room and wall rectangles, doorways, axis-aligned box collision with sliding, room lookup at a point (`RoomAt`), and locked doors (M-1–M-6). The map is stored as JSON in `data/map.json`, laid out from the confirmed 10-room list.
 - Camera follows the player, and there is a mini-map overlay (M-5).
 - `internal/input`: one action layer (move vector plus interact) shared by keyboard and touch, with an on-screen joystick and interact button shown only on touch devices (T-5, T-6).
 - Tests: collision edge cases, door blocking, room lookup, and input mapping.
 - Play-test: walk every room on a laptop and an iPad.
 
-**M2: Scenes, text, UI kit**
+**M2: Scenes, text, UI kit ✅ (v0.3.0)**
 - Scene manager: Title, then Avatar Creator, then Play, with overlay scenes (dialog, inventory, shop, notebook, settings).
 - Text rendering with `text/v2` and an embedded friendly open-licence font. Dialog boxes with character name and portrait. HUD showing the day, crystals, and backpack.
 - Junior/Expert text variants loaded from data (D-1–D-3).
 
-**M3: Save system**
+**M3: Save system ✅ (v0.4.0)**
 - `internal/save`: a versioned JSON snapshot of the game state, with a migration hook (SV-3).
 - Storage interface: `localStorage` through `syscall/js` on wasm, and a file in the user config directory on desktop.
 - Autosave on room change, job completion, purchase, and every 30 seconds. "Start over" asks for confirmation (SV-1, SV-2).
@@ -82,6 +82,11 @@ Remaining: `git init` and a first commit (after the user confirms the diff).
 3. Music and a read-aloud option.
 4. Multiple save slots and export.
 5. Online multiplayer (chat model still to be decided).
+
+## Dev tools
+- `make test` vets for desktop and WASM, then runs the tests.
+- `make test-wasm` runs the logic tests compiled to WASM under Node, including `localStorage` saving.
+- `go run ./tools/snapshot -scene <name> out.png` saves a screenshot of one screen (see `scenes.DebugScene` for the names).
 
 ## Per-milestone definition of done
 - `make test` is green, with new logic covered by tests written first.

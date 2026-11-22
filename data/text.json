@@ -2,6 +2,17 @@
   "title.tagline":       {"junior": "Explore the lab, do cool experiments, and become the best scientist!",
                           "expert": "Explore the lab, run experiments, test your theories, and become the best scientist."},
   "title.new":           {"junior": "New Scientist"},
+  "title.continue":      {"junior": "Continue"},
+  "title.corrupt":       {"junior": "Oops! Your old save got mixed up. We kept a copy just in case, but you'll need to start a new scientist."},
+  "title.future":        {"junior": "Your save is from a newer version of LabSim. Please refresh or update the game to keep playing it!"},
+  "title.storageBroken": {"junior": "This device won't let LabSim save. You can still play, but your progress won't be kept."},
+
+  "confirm.newOverwrite":{"junior": "Start a new scientist? Your old scientist and everything they have will be gone forever!"},
+  "confirm.startOver":   {"junior": "Start over? Your scientist and everything they have will be gone forever!"},
+  "confirm.yes":         {"junior": "Yes, start over"},
+  "confirm.no":          {"junior": "No, go back"},
+
+  "save.failed":         {"junior": "Saving isn't working right now"},
 
   "creator.title":       {"junior": "Make Your Scientist"},
   "creator.soon":        {"junior": "Hair, lab coats, and pets are coming soon!"},
@@ -38,6 +49,7 @@
 
   "pause.title":         {"junior": "Paused"},
   "pause.resume":        {"junior": "Keep Playing"},
+  "pause.startover":     {"junior": "Start Over"},
 
   "overlay.close":       {"junior": "Tap or press Esc to close"},
   "rotate.hint":         {"junior": "Turn your device sideways to play!"}
