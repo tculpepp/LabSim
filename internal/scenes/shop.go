@@ -156,5 +156,5 @@ func (sh *Shop) Draw(a *App, screen *ebiten.Image) {
 	sh.menu.Draw(screen)
 	selTab := sh.menu.Buttons[1+sh.tab].R
 	ui.RoundRect(screen, selTab.Expand(3), 14, nil, 3, ui.ColAccent)
-	sh.drawCategoryMarker(screen)
+	sh.drawCategoryMarker(a, screen)
 }

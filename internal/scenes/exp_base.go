@@ -20,17 +20,17 @@ const (
 // expBase is shared by the experiment screens: header, back button, the
 // scientist side panel, funny booms (E-4), and success handling (E-5, E-6).
 type expBase struct {
-	titleKey  string
-	darkBG    bool
-	bg        color.Color
-	expID     string // for job completion ("slime", "circuit", ...)
-	t         float64
-	boomT     int
-	hintKey   string // shown by Gizmo after the boom settles
-	sparkleT  int
-	note      string // short status line under the main area
-	noteGood  bool
-	pendingFC string // discovery whose fact card opens after the sparkle
+	titleKey   string
+	darkBG     bool
+	bg         color.Color
+	expID      string // for job completion ("slime", "circuit", ...)
+	t          float64
+	boomT      int
+	hintKey    string // shown by Gizmo after the boom settles
+	sparkleT   int
+	note       string // short status line under the main area
+	noteGood   bool
+	pendingFC  string // discovery whose fact card opens after the sparkle
 	pendingNew bool
 }
 
@@ -39,7 +39,9 @@ func (e *expBase) backRect(a *App) geom.Rect {
 }
 
 // side is the left panel with the scientist.
-func (e *expBase) side(a *App) geom.Rect { return geom.Rect{X: 16, Y: 60, W: 200, H: float64(a.H) - 76} }
+func (e *expBase) side(a *App) geom.Rect {
+	return geom.Rect{X: 16, Y: 60, W: 200, H: float64(a.H) - 76}
+}
 
 // main is the experiment area.
 func (e *expBase) main(a *App) geom.Rect {

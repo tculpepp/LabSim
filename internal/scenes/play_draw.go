@@ -41,6 +41,16 @@ func (p *Play) Draw(a *App, screen *ebiten.Image) {
 	p.drawLockedDoors(a, screen, cx, cy)
 
 	var sprites []sprite
+	gx, gy, _, _, _ := a.labGrid()
+	for _, pl := range a.LabLayout().Placements() {
+		pl := pl
+		x, y := gx+(float64(pl.Cell.X)+0.5)*labCell, gy+float64(pl.Cell.Y+1)*labCell-4
+		key := y
+		if flatDecor(pl.ID) {
+			key = gy - 1000 // under everything
+		}
+		sprites = append(sprites, sprite{key, func() { drawDecor(screen, pl.ID, x-cx, y-cy, 1, p.t) }})
+	}
 	for _, st := range m.Stations() {
 		st := st
 		sprites = append(sprites, sprite{st.Y + st.H/2, func() { p.drawStation(a, screen, st, cx, cy) }})

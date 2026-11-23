@@ -60,7 +60,8 @@ Go module, wallet, backpack, day clock, job board (all tested), Ebitengine place
   - **M7d** Planet Gravity: jump height and fall time from real `g` values for Moon, Earth, Mars, and Jupiter (E-SPACE-1).
 - Fun Fact cards with Junior and Expert text (E-5).
 
-**M8: Shop, upgrades, My Lab**
+**M8: Shop, upgrades, My Lab ✅ (v0.9.0)**
+- As built: shop tabs Tools / Outfits / Decor / Bags / Rooms; tools unlock experiment extras; backpack upgrades in order; Robot Workshop door opens on purchase (robot activities stay post-v1); 9 decorations placed on a grid in My Lab (not solid, so they never trap the player).
 - `internal/shop`: catalog in `data/shop.json` with categories for tools, outfits/pets, room unlocks (Robot Workshop at about 3 days of pay), decorations, and backpack upgrades (P-5). Buying spends from the wallet and grants the item. Tool upgrades unlock experiment variants (E-7).
 - My Lab: place, move, and remove decorations on a grid (P-6).
 - Tests: purchase rules, unlock effects, and grid placement.

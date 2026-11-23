@@ -8,6 +8,7 @@ import (
 
 	"labsim/internal/clock"
 	"labsim/internal/content"
+	"labsim/internal/decor"
 	"labsim/internal/economy"
 	"labsim/internal/experiment"
 	"labsim/internal/inventory"
@@ -30,6 +31,7 @@ type State struct {
 	Clock    *clock.Clock
 	Avatar   map[string]string // part → option; normalized against the catalog by the UI
 	Notebook *experiment.Notebook
+	Decor    []decor.Placement // My Lab layout; validated by the decorate scene
 
 	unlocked map[string]bool
 	flags    map[string]bool
@@ -147,6 +149,7 @@ func (s *State) Snapshot() save.Data {
 		Jobs:          s.jobs,
 		JobsDone:      keys(s.jobsDone),
 		Discoveries:   s.Notebook.Found(),
+		Decor:         s.Decor,
 	}
 }
 
@@ -176,6 +179,7 @@ func FromSave(d save.Data) (*State, error) {
 		s.Avatar[k] = v
 	}
 	s.Notebook = experiment.NewNotebook(d.Discoveries)
+	s.Decor = d.Decor
 	s.jobsDay, s.jobs = d.JobsDay, d.Jobs
 	for _, id := range d.JobsDone {
 		s.jobsDone[id] = true

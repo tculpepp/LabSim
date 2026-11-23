@@ -4,6 +4,7 @@ package scenes
 import (
 	"errors"
 	"fmt"
+	"labsim/internal/shop"
 	"log"
 	"time"
 
@@ -47,6 +48,7 @@ type App struct {
 	Supply     map[string]int // items spawned per day
 	Animals    []animalSpec
 	Disc       Discoveries
+	ShopCat    *shop.Catalog
 	Pointer    ui.Pointer
 
 	// State is the current game, nil on the title screen.
@@ -105,6 +107,9 @@ func NewApp(store save.Store) (*App, error) {
 	}
 	if err := a.loadAnimals(); err != nil {
 		return nil, fmt.Errorf("load animals: %w", err)
+	}
+	if err := a.loadShop(); err != nil {
+		return nil, fmt.Errorf("load shop: %w", err)
 	}
 	if err := a.loadDiscoveries(); err != nil {
 		return nil, fmt.Errorf("load discoveries: %w", err)

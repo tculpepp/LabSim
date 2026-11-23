@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
+	"labsim/internal/decor"
 )
 
 // CurrentVersion of the save format. Bump it (and add a Migration) when a
@@ -48,7 +49,8 @@ type Data struct {
 	Jobs     []string `json:"jobs,omitempty"`
 	JobsDone []string `json:"jobsDone,omitempty"`
 
-	Discoveries []string `json:"discoveries,omitempty"`
+	Discoveries []string          `json:"discoveries,omitempty"`
+	Decor       []decor.Placement `json:"decor,omitempty"`
 }
 
 // Migration upgrades raw save JSON from version v to v+1 in place.

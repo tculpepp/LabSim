@@ -32,3 +32,6 @@ var Animals []byte
 
 //go:embed discoveries.json
 var Discoveries []byte
+
+//go:embed shop.json
+var Shop []byte

@@ -2,6 +2,7 @@ package state
 
 import (
 	"errors"
+	"labsim/internal/decor"
 	"testing"
 	"time"
 
@@ -48,6 +49,7 @@ func TestSnapshotRoundTrip(t *testing.T) {
 	s.Own("avatar:hat:crown")
 	s.MarkPicked("d2-r0-1")
 	s.Notebook.Add("slime.glow")
+	s.Decor = []decor.Placement{{ID: "plant", Cell: decor.Cell{X: 2, Y: 1}}}
 
 	codec := save.DefaultCodec()
 	b, err := codec.Encode(s.Snapshot())
@@ -76,6 +78,9 @@ func TestSnapshotRoundTrip(t *testing.T) {
 	}
 	if r.Avatar["hat"] != "cap" || r.Avatar["pet"] != "cat" || !r.Owns("avatar:hat:crown") || r.Owns("avatar:hat:tophat") {
 		t.Fatalf("avatar/owned not restored: %v", r.Avatar)
+	}
+	if len(r.Decor) != 1 || r.Decor[0].Cell.X != 2 {
+		t.Fatalf("decor not restored: %v", r.Decor)
 	}
 	if !r.Notebook.Has("slime.glow") || r.Notebook.Has("slime.bouncy") {
 		t.Fatal("notebook not restored")

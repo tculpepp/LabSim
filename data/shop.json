@@ -1,0 +1,23 @@
+{
+  "entries": [
+    {"id": "spark_kit", "kind": "tool", "name": "Spark Kit", "desc": "4 new things to test in circuits", "price": 50},
+    {"id": "super_microscope", "kind": "tool", "name": "Super Microscope", "desc": "3 new microscope slides", "price": 70},
+    {"id": "telescope", "kind": "tool", "name": "Big Telescope", "desc": "Visit Jupiter and Pluto", "price": 90},
+
+    {"id": "bag_plus", "kind": "backpack", "name": "Bigger Backpack", "desc": "+2 slots", "price": 40, "slots": 2},
+    {"id": "bag_big", "kind": "backpack", "name": "Huge Backpack", "desc": "+3 more slots", "price": 80, "slots": 3, "requires": "bag_plus"},
+    {"id": "bag_mega", "kind": "backpack", "name": "Mega Backpack", "desc": "+4 more slots", "price": 150, "slots": 4, "requires": "bag_big"},
+
+    {"id": "robot_workshop", "kind": "room", "name": "Robot Workshop", "desc": "Open the locked workshop door", "price": 135},
+
+    {"id": "plant", "kind": "decor", "name": "Potted Plant", "price": 15},
+    {"id": "rug", "kind": "decor", "name": "Comfy Rug", "price": 20},
+    {"id": "beanbag", "kind": "decor", "name": "Beanbag Chair", "price": 25},
+    {"id": "lamp", "kind": "decor", "name": "Lava Lamp", "price": 30},
+    {"id": "fishbowl", "kind": "decor", "name": "Fish Bowl", "price": 35},
+    {"id": "bookshelf", "kind": "decor", "name": "Bookshelf", "price": 40},
+    {"id": "globe", "kind": "decor", "name": "Globe", "price": 40},
+    {"id": "rocket", "kind": "decor", "name": "Rocket Model", "price": 60},
+    {"id": "trophy", "kind": "decor", "name": "Golden Trophy", "price": 100}
+  ]
+}

@@ -2,6 +2,7 @@ package scenes
 
 import (
 	"fmt"
+	"labsim/internal/decor"
 
 	"labsim/internal/content"
 	"labsim/internal/state"
@@ -44,8 +45,33 @@ func (a *App) DebugScene(name string) error {
 	case "shop":
 		p := play()
 		p.s.X, p.s.Y = 1400, 220
+	case "shop-buy", "shop-outfits":
+		p := play()
+		p.s.Wallet.Earn(75)
+		p.s.Own("tool:spark_kit")
+		sh := NewShop(a)
+		if name == "shop-outfits" {
+			sh.cat = 1
+		}
+		a.Push(sh)
+	case "decorate":
+		p := play()
+		for _, id := range []string{"plant", "rug", "lamp", "bookshelf", "rocket", "trophy", "globe", "fishbowl", "beanbag"} {
+			p.s.Own("decor:" + id)
+		}
+		p.s.Decor = []decor.Placement{{ID: "plant", Cell: decor.Cell{X: 0, Y: 5}}, {ID: "rug", Cell: decor.Cell{X: 4, Y: 3}},
+			{ID: "bookshelf", Cell: decor.Cell{X: 6, Y: 1}}, {ID: "lamp", Cell: decor.Cell{X: 8, Y: 5}}, {ID: "rocket", Cell: decor.Cell{X: 2, Y: 2}}}
+		d := NewDecorate(a)
+		d.sel = "lamp"
+		a.Push(d)
 	case "mylab":
 		p := play()
+		for _, id := range []string{"plant", "rug", "lamp", "bookshelf", "rocket", "trophy", "globe", "fishbowl", "beanbag"} {
+			p.s.Own("decor:" + id)
+		}
+		p.s.Decor = []decor.Placement{{ID: "plant", Cell: decor.Cell{X: 0, Y: 5}}, {ID: "rug", Cell: decor.Cell{X: 4, Y: 3}},
+			{ID: "bookshelf", Cell: decor.Cell{X: 6, Y: 1}}, {ID: "lamp", Cell: decor.Cell{X: 8, Y: 5}}, {ID: "rocket", Cell: decor.Cell{X: 2, Y: 2}},
+			{ID: "globe", Cell: decor.Cell{X: 5, Y: 5}}, {ID: "fishbowl", Cell: decor.Cell{X: 3, Y: 5}}, {ID: "trophy", Cell: decor.Cell{X: 8, Y: 2}}, {ID: "beanbag", Cell: decor.Cell{X: 1, Y: 4}}}
 		p.s.X, p.s.Y = 760, 1000
 		p.s.Avatar = map[string]string{"body": "strong", "skin": "s5", "hair": "curly", "hairColor": "pink",
 			"coat": "green", "shirt": "yellow", "shoes": "red", "pattern": "dots", "eyewear": "goggles",

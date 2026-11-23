@@ -330,6 +330,8 @@ func (p *Play) useStation(a *App, st *world.Station) {
 		p.open(a, NewEditCreator(a))
 	case "shop":
 		p.open(a, NewShop(a))
+	case "decorate":
+		p.open(a, NewDecorate(a))
 	case "experiment":
 		switch st.ID {
 		case "exp_slime":
