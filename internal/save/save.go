@@ -51,6 +51,16 @@ type Data struct {
 
 	Discoveries []string          `json:"discoveries,omitempty"`
 	Decor       []decor.Placement `json:"decor,omitempty"`
+	Settings    *Settings         `json:"settings,omitempty"`
+}
+
+// Settings are the grown-up options; nil in saves made before M9.
+type Settings struct {
+	Volume     int    `json:"volume"`
+	Muted      bool   `json:"muted,omitempty"`
+	DayMinutes int    `json:"dayMinutes"`
+	Touch      string `json:"touch"`
+	ShowFPS    bool   `json:"showFPS,omitempty"`
 }
 
 // Migration upgrades raw save JSON from version v to v+1 in place.

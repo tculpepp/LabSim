@@ -156,3 +156,43 @@ func TestJobsForToday(t *testing.T) {
 		t.Fatal("done marks should expire with the jobs")
 	}
 }
+
+func TestSettingsDefaultsAndRoundTrip(t *testing.T) {
+	s := New("Ada", content.Junior, 0, 0)
+	if s.Settings != DefaultSettings() || s.Settings.Volume != 70 || s.Settings.DayMinutes != 10 {
+		t.Fatalf("defaults = %+v", s.Settings)
+	}
+	s.Settings.Volume, s.Settings.Muted, s.Settings.Touch = 30, true, TouchOn
+	r, err := FromSave(s.Snapshot())
+	if err != nil || r.Settings != s.Settings {
+		t.Fatalf("restored %+v, %v", r.Settings, err)
+	}
+	// Old saves without settings get defaults.
+	d := s.Snapshot()
+	d.Settings = nil
+	if r, _ := FromSave(d); r.Settings != DefaultSettings() {
+		t.Fatal("old save should get default settings")
+	}
+}
+
+func TestSettingsNormalize(t *testing.T) {
+	got := Settings{Volume: 150, DayMinutes: 2, Touch: "sideways"}.Normalize()
+	if got.Volume != 100 || got.DayMinutes != 5 || got.Touch != TouchAuto {
+		t.Fatalf("Normalize = %+v", got)
+	}
+	if (Settings{Volume: -5, DayMinutes: 99}).Normalize().Volume != 0 {
+		t.Fatal("negative volume")
+	}
+	if (Settings{DayMinutes: 99}).Normalize().DayMinutes != 20 {
+		t.Fatal("day too long")
+	}
+}
+
+func TestSetDayLengthKeepsDay(t *testing.T) {
+	s := New("Ada", content.Junior, 0, 0)
+	s.Clock.Advance(DayLength * 3 / 2) // day 2, halfway
+	s.SetDayMinutes(20)
+	if s.Clock.Day() != 2 || s.Settings.DayMinutes != 20 {
+		t.Fatalf("day %d, %+v", s.Clock.Day(), s.Settings)
+	}
+}

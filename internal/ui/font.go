@@ -2,25 +2,33 @@ package ui
 
 import (
 	"bytes"
+	_ "embed"
 	"image/color"
 
 	"github.com/hajimehoshi/ebiten/v2"
 	"github.com/hajimehoshi/ebiten/v2/text/v2"
-	"golang.org/x/image/font/gofont/gobold"
-	"golang.org/x/image/font/gofont/goregular"
 
 	"labsim/internal/textwrap"
 )
 
-// Go fonts (BSD licence) for now; swap for a rounder, friendlier font in the art pass (M9).
-var regularSrc, boldSrc *text.GoTextFaceSource
+// LabSim Reader: a Latin subset of Andika (SIL Open Font License 1.1, see
+// fonts/OFL.txt), renamed as the licence requires for modified versions.
+// Andika is designed for children learning to read.
+var (
+	//go:embed fonts/LabSimReader-Regular.ttf
+	regularTTF []byte
+	//go:embed fonts/LabSimReader-Bold.ttf
+	boldTTF []byte
+
+	regularSrc, boldSrc *text.GoTextFaceSource
+)
 
 func init() {
 	var err error
-	if regularSrc, err = text.NewGoTextFaceSource(bytes.NewReader(goregular.TTF)); err != nil {
+	if regularSrc, err = text.NewGoTextFaceSource(bytes.NewReader(regularTTF)); err != nil {
 		panic(err)
 	}
-	if boldSrc, err = text.NewGoTextFaceSource(bytes.NewReader(gobold.TTF)); err != nil {
+	if boldSrc, err = text.NewGoTextFaceSource(bytes.NewReader(boldTTF)); err != nil {
 		panic(err)
 	}
 }

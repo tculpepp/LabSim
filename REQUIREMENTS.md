@@ -157,7 +157,7 @@ v1 experiments (one per science):
 | SV-1 | **Auto-save** to browser storage (IndexedDB/localStorage) on room change, job completion, purchase, and every 30 s. |
 | SV-2 | **One scientist per device.** A "Start over" option asks for confirmation first. |
 | SV-3 | The save format is versioned so later updates don't break saves. |
-| AU-1 | **Sound effects only** in v1 (bubbles, zaps, booms, coin ding, footsteps). No music. |
+| AU-1 | **Sound effects only** in v1 (bubbles, zaps, booms, coin ding, footsteps). No music. (Synthesized in code; footsteps left out as too repetitive.) |
 | AU-2 | Mute toggle and volume slider. |
 | ST-1 | Settings: difficulty, sound, day length, control style. |
 
@@ -175,8 +175,8 @@ v1 experiments (one per science):
 | ID | Requirement |
 |----|-------------|
 | AR-1 | Bright, cute cartoon style with a top-down view and round, friendly characters. |
-| AR-2 | v1 uses **free CC0 asset packs** (e.g., Kenney.nl), recolored to look consistent. |
-| AR-3 | Avatar parts are layered sprites (body, hair, clothes, accessories), so combinations are cheap to add. |
+| AR-2 | ~~v1 uses free CC0 asset packs (e.g., Kenney.nl)~~ **Changed in M9:** all art is drawn in code (vector shapes), so it is one consistent style, tiny to download, and free of licence questions. Asset packs remain an option later. |
+| AR-3 | Avatar parts are layered (body, hair, clothes, accessories), so combinations are cheap to add. (Drawn as layered vector shapes rather than sprite images.) |
 
 ## 14. v1 "Done" Definition (first playable)
 

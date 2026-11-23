@@ -32,6 +32,7 @@ type State struct {
 	Avatar   map[string]string // part → option; normalized against the catalog by the UI
 	Notebook *experiment.Notebook
 	Decor    []decor.Placement // My Lab layout; validated by the decorate scene
+	Settings Settings
 
 	unlocked map[string]bool
 	flags    map[string]bool
@@ -54,6 +55,7 @@ func New(name string, lvl content.Level, x, y float64) *State {
 		Clock:    clock.New(DayLength),
 		Avatar:   map[string]string{},
 		Notebook: experiment.NewNotebook(nil),
+		Settings: DefaultSettings(),
 		unlocked: map[string]bool{},
 		flags:    map[string]bool{},
 		owned:    map[string]bool{},
@@ -150,6 +152,7 @@ func (s *State) Snapshot() save.Data {
 		JobsDone:      keys(s.jobsDone),
 		Discoveries:   s.Notebook.Found(),
 		Decor:         s.Decor,
+		Settings:      s.Settings.toSave(),
 	}
 }
 
@@ -165,7 +168,7 @@ func FromSave(d save.Data) (*State, error) {
 			return nil, fmt.Errorf("%w: backpack: %v", save.ErrCorrupt, err)
 		}
 	}
-	s.Clock = clock.Restore(DayLength, d.Day, time.Duration(d.DayElapsedMs)*time.Millisecond)
+	s.Clock = clock.Restore(time.Duration(settingsFromSave(d.Settings).DayMinutes)*time.Minute, d.Day, time.Duration(d.DayElapsedMs)*time.Millisecond)
 	for _, id := range d.Unlocked {
 		s.Unlock(id)
 	}
@@ -180,6 +183,7 @@ func FromSave(d save.Data) (*State, error) {
 	}
 	s.Notebook = experiment.NewNotebook(d.Discoveries)
 	s.Decor = d.Decor
+	s.Settings = settingsFromSave(d.Settings)
 	s.jobsDay, s.jobs = d.JobsDay, d.Jobs
 	for _, id := range d.JobsDone {
 		s.jobsDone[id] = true

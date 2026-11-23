@@ -15,6 +15,7 @@ func main() {
 	if err != nil {
 		log.Fatal(err)
 	}
+	app.EnableSound()
 	ebiten.SetWindowSize(1080, 720)
 	ebiten.SetWindowTitle("LabSim")
 	ebiten.SetWindowResizingMode(ebiten.WindowResizingModeEnabled)

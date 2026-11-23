@@ -76,8 +76,19 @@ type Menu struct {
 	hideFocus bool // touch players have no "focus"; only keyboard/mouse do
 }
 
+// OnActivate, if set, runs whenever any menu button is activated (click sound).
+var OnActivate func()
+
 // Update returns the index of the activated button, or -1.
 func (m *Menu) Update(p *Pointer) int {
+	i := m.update(p)
+	if i >= 0 && OnActivate != nil {
+		OnActivate()
+	}
+	return i
+}
+
+func (m *Menu) update(p *Pointer) int {
 	n := len(m.Buttons)
 	if n == 0 {
 		return -1

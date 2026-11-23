@@ -181,11 +181,16 @@ func (p *Play) open(a *App, s Scene) {
 func (p *Play) Update(a *App) error {
 	dt := time.Second / time.Duration(ebiten.TPS())
 	p.t += dt.Seconds()
+	wasNight := p.s.Clock.IsNight()
 	if p.s.Clock.Advance(dt) > 0 {
 		p.banner, p.bannerT = a.Tf("day.new", p.s.Clock.Day()), bannerTicks*2
+		a.Sound("success")
 		a.SaveNow()
 	} else if p.bannerT > 0 {
 		p.bannerT--
+	}
+	if !wasNight && p.s.Clock.IsNight() {
+		a.Sound("night")
 	}
 	a.autosave.Tick(dt)
 
@@ -284,6 +289,7 @@ func (p *Play) updateRoom(a *App) {
 		a.SaveNow() // SV-1: save on room change
 		if id != "" {
 			p.banner, p.bannerT = p.roomName(a), bannerTicks
+			a.Sound("door")
 		}
 	}
 }

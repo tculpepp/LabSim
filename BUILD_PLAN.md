@@ -66,7 +66,8 @@ Go module, wallet, backpack, day clock, job board (all tested), Ebitengine place
 - My Lab: place, move, and remove decorations on a grid (P-6).
 - Tests: purchase rules, unlock effects, and grid placement.
 
-**M9: Art and audio pass**
+**M9: Art and audio pass ✅ (v0.10.0)**
+- As built: procedural vector art kept and polished instead of Kenney packs (AR-2 updated); Andika font (OFL, Latin subset renamed "LabSim Reader"); 13 sound effects synthesized in `internal/sfx`; volume/mute stored in the save (settings screen in M10). See `CREDITS.md`.
 - Replace the placeholders with Kenney CC0 packs, recolored for one consistent look (AR-1–AR-3). Credits go in `CREDITS.md`.
 - Sprite sheets for the avatar layers, NPCs, Tom (as she described him), and Gizmo (round and floating, screen face). Walk animations and a night tint.
 - Sound effects (bubbles, zaps, booms, coin ding, footsteps) with mute and volume controls (AU-1, AU-2).
