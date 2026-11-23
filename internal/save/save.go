@@ -45,7 +45,7 @@ type Data struct {
 	PickedDay int      `json:"pickedDay,omitempty"`
 	Picked    []string `json:"picked,omitempty"` // pickup keys grabbed on PickedDay
 
-	JobsDay  int      `json:"jobsDay,omitempty"` // day Dr. Nova handed out Jobs
+	JobsDay  int      `json:"jobsDay,omitempty"` // day Professor Emily handed out Jobs
 	Jobs     []string `json:"jobs,omitempty"`
 	JobsDone []string `json:"jobsDone,omitempty"`
 

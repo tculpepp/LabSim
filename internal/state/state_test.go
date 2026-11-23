@@ -135,7 +135,7 @@ func TestPickedResetsOnNewDay(t *testing.T) {
 func TestJobsForToday(t *testing.T) {
 	s := New("x", content.Junior, 0, 0)
 	if _, ok := s.TodaysJobs(); ok {
-		t.Fatal("no jobs before visiting Dr. Nova")
+		t.Fatal("no jobs before visiting Professor Emily")
 	}
 	s.GiveJobs([]string{"a", "b"})
 	s.MarkJobDone("a")

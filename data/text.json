@@ -37,7 +37,7 @@
   "name.tooLong":        {"junior": "That name is a little too long!"},
   "name.badChars":       {"junior": "Use letters and numbers only."},
 
-  "station.nova":        {"junior": "Dr. Nova"},
+  "station.nova":        {"junior": "Professor Emily"},
   "station.tom":         {"junior": "Tom's Shop"},
   "station.exp_slime":   {"junior": "Glowing Slime"},
   "station.exp_circuit": {"junior": "Circuit Builder"},
@@ -57,11 +57,11 @@
   "creator.defaultName": {"junior": "Scientist"},
 
   "gizmo.name":          {"junior": "Gizmo"},
-  "gizmo.welcome":       {"junior": "Hi %s! I'm Gizmo, your owl helper! Walk with the arrow keys or W A S D. On a tablet, drag your finger on the left side of the screen. Press E or tap Use to do things. First, let's visit Dr. Nova in her office. Follow my blue arrow!",
-                          "expert": "Welcome to the lab, %s. I'm Gizmo. Move with WASD or the arrow keys, or drag on the left side of a touch screen. E or Use interacts, M opens the map, B opens your backpack, J hides the job list. Start by visiting Dr. Nova for today's jobs."},
+  "gizmo.welcome":       {"junior": "Hi %s! I'm Gizmo, your owl helper! Walk with the arrow keys or W A S D. On a tablet, drag your finger on the left side of the screen. Press E or tap Use to do things. First, let's visit Professor Emily in her office. Follow my blue arrow!",
+                          "expert": "Welcome to the lab, %s. I'm Gizmo. Move with WASD or the arrow keys, or drag on the left side of a touch screen. E or Use interacts, M opens the map, B opens your backpack, J hides the job list. Start by visiting Professor Emily for today's jobs."},
   "tut.paid":            {"junior": "You got paid! Crystals show up at the top of the screen. Save them up and spend them at Tom's Shop!"},
 
-  "nova.name":           {"junior": "Dr. Nova"},
+  "nova.name":           {"junior": "Professor Emily"},
   "nova.jobs":           {"junior": "Good morning, %s! I love having you in the lab. Here are today's jobs:",
                           "expert": "Morning, %s. Today's assignments:"},
   "nova.keepGoing":      {"junior": "You still have %d jobs to do today. You can do it! Gizmo's arrow will show you where to go."},
@@ -69,7 +69,7 @@
   "job.paid":            {"junior": "+%d crystals!"},
   "job.delivered":       {"junior": "Job done: %s! Here are %d crystals. Thank you!"},
   "jobs.title":          {"junior": "Today's Jobs"},
-  "jobs.none":           {"junior": "Visit Dr. Nova to get today's jobs!"},
+  "jobs.none":           {"junior": "Visit Professor Emily to get today's jobs!"},
 
   "animal.pet":          {"junior": "Pet"},
   "animal.bunny":        {"junior": "The bunny wiggles its nose!"},
@@ -245,7 +245,7 @@
   "shop.buyOne": {"junior": "Buy"},
   "shop.owned": {"junior": "Owned"},
   "shop.locked": {"junior": "Later"},
-  "tom.poor": {"junior": "Not enough crystals yet! Do Dr. Nova's jobs and sell things you find. You'll get there!"},
+  "tom.poor": {"junior": "Not enough crystals yet! Do Professor Emily's jobs and sell things you find. You'll get there!"},
   "tom.bought.tool": {"junior": "Great choice! Try it out at the experiment benches. You'll find new things to discover!"},
   "tom.bought.outfit": {"junior": "Looking sharp! Visit the wardrobe in My Lab to put it on."},
   "tom.bought.decor": {"junior": "Nice! Use the decorating table in My Lab to put it wherever you like."},

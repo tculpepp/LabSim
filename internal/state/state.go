@@ -82,7 +82,7 @@ func (s *State) Picked(key string) bool {
 	return s.picked[key]
 }
 
-// TodaysJobs returns the job IDs Dr. Nova gave out today; ok is false if
+// TodaysJobs returns the job IDs Professor Emily gave out today; ok is false if
 // the player hasn't visited her yet today.
 func (s *State) TodaysJobs() ([]string, bool) {
 	if s.jobsDay != s.Clock.Day() {

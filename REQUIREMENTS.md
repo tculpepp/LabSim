@@ -48,7 +48,7 @@ A friendly, top-down 2D science lab. You design your own scientist, walk around 
 | M-1 | Top-down 2D map of connected rooms and hallways in a cute cartoon style. |
 | M-2 | **10 rooms** (confirmed by the designer): |
 |     | 1. Main Hall (hub/spawn) |
-|     | 2. Dr. Nova's Office (daily jobs and pay) |
+|     | 2. Professor Emily's Office (daily jobs and pay) |
 |     | 3. Shop (run by Tom) |
 |     | 4. Chemistry Lab |
 |     | 5. Physics Lab |
@@ -116,7 +116,7 @@ v1 experiments (one per science):
 | P-1 | The currency is **crystals** (shown with a crystal icon). They are different from the **star dust** item you pick up on the map. |
 | P-2 | Ways to earn: **daily jobs**, **first-time discoveries**, and **selling items**. |
 | P-3 | **In-game day**: about 10 real minutes by default, and configurable. There is a day/night tint, and the morning starts a new day. |
-| P-4 | Each in-game morning, **Dr. Nova** gives out 3 jobs, for example "Deliver 3 jars of star dust to the Space Lab" or "Light the bulb in the Physics Lab". Players are paid when a job is done. |
+| P-4 | Each in-game morning, **Professor Emily** gives out 3 jobs, for example "Deliver 3 jars of star dust to the Space Lab" or "Light the bulb in the Physics Lab". Players are paid when a job is done. |
 | P-5 | Shop categories: **lab tool upgrades**, **avatar outfits/accessories/pets**, **room unlocks**, **decorations for My Lab**, and **backpack upgrades**. |
 | P-6 | **My Lab**: the player places and moves decorations and trophies on a grid. |
 | P-7 | The game **never ends**. There is no final win state. Long-term goals are filling the notebook, collecting outfits and decorations, and unlocking every room. |
@@ -145,7 +145,7 @@ v1 experiments (one per science):
 
 | ID | Character | Role |
 |----|-----------|------|
-| C-1 | **Dr. Nova** (Boss Scientist) | Loves space and always smiles. Gives daily jobs, pays the player in crystals, and congratulates them. |
+| C-1 | **Professor Emily** (Boss Scientist) | Loves space and always smiles. Gives daily jobs, pays the player in crystals, and congratulates them. |
 | C-2 | **Tom** (Shopkeeper) | Runs the shop and loves to help people become better scientists. Gives friendly tips about which upgrades help. **Look:** tall, light skin, blue eyes, brown hair that is a little lopsided, short beard. He is right-handed, so he holds things in his right hand. |
 | C-3 | **Gizmo** (Helper Owl) | **Look:** a round, bright green cartoon owl with big friendly eyes and lab goggles pushed up on its forehead. Floats next to the player, flapping little wings. Runs the tutorial, gives hints on request, and points the way to job targets. |
 | C-4 | **Lab Animals** | **Hamster/mouse**, **frog/axolotl** (in a tank), **bunny** (hops in the halls), **butterflies/bugs** (in the Greenhouse). They wander the map, and some are part of biology content. |
@@ -184,7 +184,7 @@ v1 experiments (one per science):
 2. Walk around the 8–10 room map on both keyboard and touch.
 3. Grab items into the backpack.
 4. Play all 4 experiments, including success, funny-boom failure, hints, and notebook discoveries.
-5. Receive and complete daily jobs from Dr. Nova and get paid in crystals.
+5. Receive and complete daily jobs from Professor Emily and get paid in crystals.
 6. Buy at least one item in each shop category, and place a decoration in My Lab.
 7. Auto-save and resume.
 8. Install as a PWA and play offline.

@@ -421,7 +421,7 @@ func (p *Play) afterPay(a *App) {
 	}
 }
 
-// jobTarget is where Gizmo's arrow points: Dr. Nova if you have no jobs
+// jobTarget is where Gizmo's arrow points: Professor Emily if you have no jobs
 // yet, otherwise the station for your next job (C-3).
 func (p *Play) jobTarget(a *App) *world.Station {
 	b := a.Board()

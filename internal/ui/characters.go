@@ -9,9 +9,9 @@ import (
 	"labsim/internal/geom"
 )
 
-// Dr. Nova: loves space and always smiles (C-1).
+// Professor Emily: loves space and always smiles (C-1).
 var novaLook = avatar.Avatar{
-	"body": "round", "skin": "s4", "hair": "bun", "hairColor": "black", "coat": "white",
+	"body": "round", "skin": "s4", "hair": "bun", "hairColor": "blonde", "coat": "white",
 	"shirt": "navy", "shoes": "black", "pattern": "stars", "eyewear": "glasses", "hat": "none", "gear": "none",
 }
 

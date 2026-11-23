@@ -6,7 +6,7 @@
     {"id": "chemistry", "name": "Chemistry Lab", "color": "#c8f0c8",
      "bounds": {"x": 80, "y": 60, "w": 400, "h": 300},
      "doors": [{"side": "right"}, {"side": "bottom"}]},
-    {"id": "office", "name": "Dr. Nova's Office", "color": "#c9d6f2",
+    {"id": "office", "name": "Professor Emily's Office", "color": "#c9d6f2",
      "bounds": {"x": 640, "y": 60, "w": 400, "h": 300},
      "doors": [{"side": "bottom"}]},
     {"id": "shop", "name": "Shop", "color": "#f9d2e0",

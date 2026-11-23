@@ -33,7 +33,7 @@ Tester: ________  Device: ________  Date: ________  Version: ________
 - [ ] Open the Science Notebook (N / **Notes**) and re-read a fun fact.
 
 ## 5. Jobs
-- [ ] Day 1: Gizmo's tutorial leads you to Dr. Nova, and you complete the first jobs.
+- [ ] Day 1: Gizmo's tutorial leads you to Professor Emily, and you complete the first jobs.
 - [ ] Get paid for a delivery job and an experiment job.
 - [ ] Next day: new jobs appear.
 

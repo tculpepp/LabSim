@@ -46,7 +46,7 @@ Go module, wallet, backpack, day clock, job board (all tested), Ebitengine place
 - Selling items to Tom (I-3).
 
 **M6: Characters and daily jobs ✅ (v0.7.0)**
-- NPCs: Dr. Nova (office), Tom (shop), Gizmo (floats beside the player and runs the tutorial), and wandering lab animals (C-1–C-4, S-6).
+- NPCs: Professor Emily (office), Tom (shop), Gizmo (floats beside the player and runs the tutorial), and wandering lab animals (C-1–C-4, S-6).
 - Each morning, deal 3 jobs from `data/jobs.json` seeded by the day number (P-3, P-4). Delivery jobs check the backpack and room. Experiment jobs listen for experiment-completed events. Pay goes to the wallet.
 - Gizmo's first-day tutorial: walk, grab, deliver, get paid.
 

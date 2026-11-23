@@ -25,7 +25,7 @@ func (a *App) loadJobs() error {
 	return nil
 }
 
-// Board is today's job board, or nil if Dr. Nova hasn't handed out jobs yet.
+// Board is today's job board, or nil if Professor Emily hasn't handed out jobs yet.
 func (a *App) Board() *jobs.Board {
 	ids, ok := a.State.TodaysJobs()
 	if !ok {
@@ -107,7 +107,7 @@ func (a *App) ExperimentDone(experiment string) int {
 	return total
 }
 
-// TalkToNova is what happens when you use Dr. Nova's desk (C-1, P-4).
+// TalkToNova is what happens when you use Professor Emily's desk (C-1, P-4).
 func (a *App) TalkToNova() {
 	b := a.Board()
 	switch {

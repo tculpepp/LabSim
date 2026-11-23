@@ -11,10 +11,10 @@ func TestJobsFromNovaDeliverAndPay(t *testing.T) {
 	store := &save.MemStore{}
 	a, p := playing(t, store)
 	if a.Board() != nil {
-		t.Fatal("jobs before visiting Dr. Nova")
+		t.Fatal("jobs before visiting Professor Emily")
 	}
 	if st := p.jobTarget(a); st == nil || st.ID != "nova" {
-		t.Fatalf("Gizmo should point to Dr. Nova first, got %v", st)
+		t.Fatalf("Gizmo should point to Professor Emily first, got %v", st)
 	}
 	a.TalkToNova()
 	a.Pop() // dialog
@@ -22,7 +22,7 @@ func TestJobsFromNovaDeliverAndPay(t *testing.T) {
 	if b == nil || len(b.All()) != len(a.JobPool.FirstDay) {
 		t.Fatalf("first-day jobs not given: %v", b)
 	}
-	// First-day job: 3 star dust to Dr. Nova.
+	// First-day job: 3 star dust to Professor Emily.
 	a.State.Backpack.Add("star_dust", 3)
 	p.useStation(a, a.Map.Station("nova"))
 	if a.State.Wallet.Crystals() != 15 || a.State.Backpack.Count("star_dust") != 0 {
@@ -48,7 +48,7 @@ func TestJobsFromNovaDeliverAndPay(t *testing.T) {
 		t.Fatal("job progress lost on reload")
 	}
 
-	// Next day: jobs expire, Dr. Nova deals a fresh random set.
+	// Next day: jobs expire, Professor Emily deals a fresh random set.
 	a.State.Clock.Advance(state.DayLength)
 	if a.Board() != nil {
 		t.Fatal("yesterday's jobs still active")

@@ -1,4 +1,4 @@
-// Package jobs implements Dr. Nova's daily job board (P-2, P-4).
+// Package jobs implements Professor Emily's daily job board (P-2, P-4).
 package jobs
 
 import (
@@ -33,7 +33,7 @@ type Job struct {
 	Reward     int    `json:"reward"`
 }
 
-// Pool is every job Dr. Nova can hand out, plus the gentle first-day set.
+// Pool is every job Professor Emily can hand out, plus the gentle first-day set.
 type Pool struct {
 	Jobs     []Job    `json:"pool"`
 	FirstDay []string `json:"firstDay"`

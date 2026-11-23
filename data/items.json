@@ -1,6 +1,6 @@
 {
   "items": [
-    {"id": "star_dust", "name": "Star Dust", "desc": "Sparkly powder in a little jar. Dr. Nova loves it!", "icon": "jar", "color": "#ffe27a", "sell": 3},
+    {"id": "star_dust", "name": "Star Dust", "desc": "Sparkly powder in a little jar. Professor Emily loves it!", "icon": "jar", "color": "#ffe27a", "sell": 3},
     {"id": "slime_base", "name": "Slime Base", "desc": "Gooey glue. Every slime starts with this!", "icon": "bottle", "color": "#e8f4ff", "sell": 2},
     {"id": "glow_powder", "name": "Glow Powder", "desc": "A powder that glows in the dark.", "icon": "jar", "color": "#b6ff6a", "sell": 4},
     {"id": "rainbow_drops", "name": "Rainbow Drops", "desc": "Drops of every color of the rainbow.", "icon": "bottle", "color": "#ff7ac8", "sell": 4},

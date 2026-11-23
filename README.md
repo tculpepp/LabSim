@@ -1,7 +1,7 @@
 # LabSim
 
 A science-lab game designed by an 8-year-old scientist. Make your own
-scientist, explore a 10-room lab, collect things, do Dr. Nova's daily jobs,
+scientist, explore a 10-room lab, collect things, do Professor Emily's daily jobs,
 run real(ish) experiments, and spend your crystals in Tom's shop.
 
 Written in Go with [Ebitengine](https://ebitengine.org/), compiled to
