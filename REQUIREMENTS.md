@@ -26,7 +26,7 @@ A friendly, top-down 2D science lab. You design your own scientist, walk around 
 | T-7 | Game logic (economy, inventory, experiments, jobs, day clock, save model) lives in pure Go packages with no Ebitengine dependency, so it can be unit-tested with TDD. |
 | T-8 | Static hosting only for v1. No server or accounts. |
 | T-9 | The architecture keeps a clean split between game state and simulation, so **online multiplayer can be added later** (see §12). |
-| T-10 | Performance target: 60 fps on a mid-range Chromebook and iPad. The first download is under 15 MB compressed (gzip/brotli). The current shell is about 3.7 MB gzipped and 16 MB raw. |
+| T-10 | Performance target: 60 fps on a mid-range Chromebook and iPad. The first download is under 15 MB compressed (gzip/brotli). At v1.0.0-rc.1 the game is about 4.9 MB gzipped and 21 MB raw (`make size`). |
 
 ## 3. Player & Avatar
 

@@ -255,5 +255,22 @@
   "decorate.help": {"junior": "Pick a decoration, then tap a square."},
   "decorate.where": {"junior": "Now tap a square to put it there!"},
   "decorate.blocked": {"junior": "Something's already there. Try another square!"},
-  "decorate.none": {"junior": "You don't have any decorations yet. Tom sells them in his shop!"}
+  "decorate.none": {"junior": "You don't have any decorations yet. Tom sells them in his shop!"},
+  "pause.settings": {"junior": "Settings"},
+  "settings.title": {"junior": "Settings"},
+  "settings.done": {"junior": "Done"},
+  "settings.volume": {"junior": "Volume"},
+  "settings.muted": {"junior": "Muted"},
+  "settings.sound": {"junior": "Sound effects"},
+  "settings.on": {"junior": "On"},
+  "settings.off": {"junior": "Off"},
+  "settings.level": {"junior": "Level"},
+  "settings.day": {"junior": "Day length"},
+  "settings.minutes": {"junior": "%d minutes"},
+  "settings.touch": {"junior": "Touch controls"},
+  "settings.touch.auto": {"junior": "Automatic"},
+  "settings.touch.on": {"junior": "Always show"},
+  "settings.touch.off": {"junior": "Hide"},
+  "settings.fps": {"junior": "Show speed (FPS)"},
+  "settings.note": {"junior": "Settings are saved with this scientist."}
 }

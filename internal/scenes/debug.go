@@ -54,6 +54,10 @@ func (a *App) DebugScene(name string) error {
 			sh.cat = 1
 		}
 		a.Push(sh)
+	case "settings":
+		p := play()
+		p.s.Settings.ShowFPS = true
+		a.Push(&Settings{})
 	case "decorate":
 		p := play()
 		for _, id := range []string{"plant", "rug", "lamp", "bookshelf", "rocket", "trophy", "globe", "fishbowl", "beanbag"} {

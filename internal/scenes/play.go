@@ -237,7 +237,7 @@ func (p *Play) Update(a *App) error {
 
 	if inpututil.IsKeyJustPressed(ebiten.KeyE) || inpututil.IsKeyJustPressed(ebiten.KeySpace) ||
 		inpututil.IsKeyJustPressed(ebiten.KeyEnter) ||
-		(a.Pointer.TouchDevice() && a.Pointer.TapIn(p.useButton(a))) {
+		(a.ShowTouch() && a.Pointer.TapIn(p.useButton(a))) {
 		p.interact(a)
 	}
 	return nil

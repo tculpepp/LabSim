@@ -165,7 +165,7 @@ func (p *Play) drawLockedDoors(a *App, screen *ebiten.Image, cx, cy float64) {
 func (p *Play) drawPrompt(a *App, screen *ebiten.Image, label string, x, y float64) {
 	face := ui.Bold(ui.SizeSmall)
 	key := "E"
-	if a.Pointer.TouchDevice() {
+	if a.ShowTouch() {
 		key = a.T("hud.use")
 	}
 	s := key + ": " + label

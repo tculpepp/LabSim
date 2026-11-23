@@ -1,5 +1,5 @@
 // Offline cache for LabSim (T-4). Bump VERSION on every release so players get updates.
-const VERSION = "labsim-v1";
+const VERSION = "labsim-__BUILD__"; // replaced by `make wasm`
 const SHELL = [
   "./",
   "index.html",

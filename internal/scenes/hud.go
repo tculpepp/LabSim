@@ -52,7 +52,7 @@ func (p *Play) drawHUD(a *App, screen *ebiten.Image) {
 		ui.TextCentered(screen, p.banner, face, cx, 84, ui.ColText)
 	}
 
-	if a.Pointer.TouchDevice() {
+	if a.ShowTouch() {
 		if p.joy.Active() {
 			ox, oy := p.joy.Origin()
 			kx, ky := p.joy.Knob()

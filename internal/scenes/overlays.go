@@ -187,6 +187,7 @@ type Pause struct {
 func NewPause(a *App) *Pause {
 	p := &Pause{}
 	p.add(a.T("pause.resume"), func(a *App) { a.Pop() })
+	p.add(a.T("pause.settings"), func(a *App) { a.Push(&Settings{}) })
 	p.add(a.T("pause.startover"), func(a *App) {
 		a.Confirm("confirm.startOver", func(a *App) { a.StartOver() })
 	})

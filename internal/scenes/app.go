@@ -9,6 +9,7 @@ import (
 	"time"
 
 	"github.com/hajimehoshi/ebiten/v2"
+	"github.com/hajimehoshi/ebiten/v2/text/v2"
 
 	"labsim/data"
 	"labsim/internal/avatar"
@@ -264,6 +265,9 @@ func (a *App) Draw(screen *ebiten.Image) {
 		ui.Fill(screen, geom.Rect{W: float64(a.W), H: float64(a.H)}, 0, 0, ui.ColWall)
 		ui.TextCentered(screen, a.T("rotate.hint"), ui.Bold(ui.SizeHeading), float64(a.W)/2, float64(a.H)/2, ui.ColTextLight)
 	}
+	if a.State != nil && a.State.Settings.ShowFPS {
+		ui.Text(screen, fmt.Sprintf("%.0f FPS  %.0f TPS", ebiten.ActualFPS(), ebiten.ActualTPS()), ui.Bold(ui.SizeSmall), 8, float64(a.H)-40, ui.ColFocus, text.AlignStart)
+	}
 }
 
 func (a *App) Layout(outW, outH int) (int, int) {
@@ -291,6 +295,19 @@ func (a *App) DrawItem(screen *ebiten.Image, id string, x, y, size float64) {
 		return
 	}
 	ui.ItemIcon(screen, it.Icon, ui.Hex(it.Color), x, y, size)
+}
+
+// ShowTouch reports whether on-screen touch controls are shown (ST-1).
+func (a *App) ShowTouch() bool {
+	if a.State != nil {
+		switch a.State.Settings.Touch {
+		case state.TouchOn:
+			return true
+		case state.TouchOff:
+			return false
+		}
+	}
+	return a.Pointer.TouchDevice()
 }
 
 // Sound plays a named sound effect (no-op until audio is loaded).

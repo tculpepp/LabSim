@@ -72,7 +72,9 @@ Go module, wallet, backpack, day clock, job board (all tested), Ebitengine place
 - Sprite sheets for the avatar layers, NPCs, Tom (as she described him), and Gizmo (round and floating, screen face). Walk animations and a night tint.
 - Sound effects (bubbles, zaps, booms, coin ding, footsteps) with mute and volume controls (AU-1, AU-2).
 
-**M10: Polish and release v1**
+**M10: Polish and release v1 ✅ (v1.0.0-rc.1)**
+- As built: Settings screen from Pause (volume, sound, level, day length 5–20 min, touch controls auto/on/off, FPS overlay), saved per scientist. `make wasm` gives the service worker a new cache name per build; `make size` enforces the 15 MB budget (4.9 MB gzipped). Verified in Chrome: service worker active, all 7 shell files cached, 60 fps, and the game loads and plays with the server stopped. GitHub Pages workflow added (not yet run: no remote). `PLAYTEST.md` holds the §14 checklist.
+- Remaining for **v1.0.0**: the designer's play-test on a real iPad/Chromebook (touch feel, 60 fps on slow hardware, install + airplane mode).
 - Settings screen: difficulty, sound, day length, controls (ST-1).
 - Performance pass at 60 fps on a Chromebook and an iPad, and a check of the compressed bundle size (T-10).
 - Offline PWA test: install, go into airplane mode, play (T-4). Add a service worker version bump to the Makefile.
