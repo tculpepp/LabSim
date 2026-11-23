@@ -313,7 +313,18 @@ func (p *Play) interact(a *App) {
 		return
 	}
 	r := a.Map.Room(d.RoomID)
-	a.Say("gizmo", "gizmo.name", a.Tf("door.locked", r.Name, r.UnlockPrice))
+	e, ok := a.ShopCat.Get(r.ID)
+	if have := a.State.Wallet.Crystals(); !ok || have < e.Price {
+		a.Say("gizmo", "gizmo.name", a.Tf("door.locked", r.Name, r.UnlockPrice, max(0, r.UnlockPrice-have)))
+		return
+	}
+	// Enough crystals: open it right here instead of a trip to Tom's shop.
+	a.Push(NewConfirmText(a, a.Tf("door.buy", r.Name, e.Price), func(a *App) {
+		if a.Buy(e) == nil {
+			a.Sound("door")
+			a.Say("gizmo", "gizmo.name", a.Tf("door.opened", r.Name))
+		}
+	}))
 }
 
 func (p *Play) useStation(a *App, st *world.Station) {

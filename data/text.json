@@ -77,8 +77,10 @@
   "animal.butterfly":    {"junior": "The butterfly lands on your hand!"},
   "animal.axolotl":      {"junior": "The axolotl waves its frilly gills!"},
 
-  "door.locked":         {"junior": "The %s is locked! It costs %d crystals to open. Do jobs to save up!",
-                          "expert": "The %s is locked. Unlock cost: %d crystals."},
+  "door.locked":         {"junior": "The %s is locked! It costs %d crystals to open. You need %d more. Do jobs to save up!",
+                          "expert": "The %s is locked. Unlock cost: %d crystals (%d more needed)."},
+  "door.buy":            {"junior": "Open the %s for %d crystals?"},
+  "door.opened":         {"junior": "The %s is open! Go take a look!"},
 
   "room.hallway":        {"junior": "Hallway"},
   "day.new":             {"junior": "Good morning! Day %d"},

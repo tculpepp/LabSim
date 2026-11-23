@@ -247,7 +247,12 @@ type Confirm struct {
 }
 
 func NewConfirm(a *App, questionKey string, onYes func(a *App)) *Confirm {
-	c := &Confirm{question: a.T(questionKey), onYes: onYes}
+	return NewConfirmText(a, a.T(questionKey), onYes)
+}
+
+// NewConfirmText asks an already-formatted question.
+func NewConfirmText(a *App, question string, onYes func(a *App)) *Confirm {
+	c := &Confirm{question: question, onYes: onYes}
 	c.menu.Buttons = []ui.Button{{Label: a.T("confirm.no")}, {Label: a.T("confirm.yes")}}
 	return c
 }
