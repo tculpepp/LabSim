@@ -27,6 +27,7 @@ func (p *Play) drawHUD(a *App, screen *ebiten.Image) {
 	ui.Text(screen, a.Tf("hud.bag", p.s.Backpack.UsedSlots(), p.s.Backpack.Slots()), body, 210, 17, ui.ColText, text.AlignStart)
 
 	for _, b := range []ui.Button{
+		{R: p.notesButton(a), Label: a.T("hud.notes")},
 		{R: p.mapButton(a), Label: a.T("hud.map")},
 		{R: p.bagButton(a), Label: a.T("hud.bagButton")},
 		{R: p.pauseButton(a), Label: "II"},

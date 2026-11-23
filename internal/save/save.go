@@ -47,6 +47,8 @@ type Data struct {
 	JobsDay  int      `json:"jobsDay,omitempty"` // day Dr. Nova handed out Jobs
 	Jobs     []string `json:"jobs,omitempty"`
 	JobsDone []string `json:"jobsDone,omitempty"`
+
+	Discoveries []string `json:"discoveries,omitempty"`
 }
 
 // Migration upgrades raw save JSON from version v to v+1 in place.

@@ -50,7 +50,8 @@ Go module, wallet, backpack, day clock, job board (all tested), Ebitengine place
 - Each morning, deal 3 jobs from `data/jobs.json` seeded by the day number (P-3, P-4). Delivery jobs check the backpack and room. Experiment jobs listen for experiment-completed events. Pay goes to the wallet.
 - Gizmo's first-day tutorial: walk, grab, deliver, get paid.
 
-**M7: Experiment framework and the 4 experiments**
+**M7: Experiment framework and the 4 experiments ✅ (v0.8.0)**
+- As built: Expert circuit adds an ON/OFF switch (closed-loop idea) instead of series vs. parallel; gravity adds Pluto with the telescope. 26 discoveries, each with a Junior/Expert fun fact; +5 crystal bonus the first time; Science Notebook (N / Notes button).
 - `internal/experiment`: a shared interface for the three styles (Sandbox, Predict→Test, Task); a result type (success / funny boom + hint); first-time discovery tracking in the Science Notebook with a bonus payout (E-1–E-7).
 - Build one experiment at a time. Each has its logic tested first, then its UI:
   - **M7a** Glowing Slime: ingredient combinations lead to Glow / Bouncy / Rainbow / Stretchy-Sticky slime (E-CHEM-1).

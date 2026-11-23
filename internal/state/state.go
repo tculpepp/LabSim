@@ -9,6 +9,7 @@ import (
 	"labsim/internal/clock"
 	"labsim/internal/content"
 	"labsim/internal/economy"
+	"labsim/internal/experiment"
 	"labsim/internal/inventory"
 	"labsim/internal/save"
 )
@@ -28,6 +29,7 @@ type State struct {
 	Backpack *inventory.Backpack
 	Clock    *clock.Clock
 	Avatar   map[string]string // part → option; normalized against the catalog by the UI
+	Notebook *experiment.Notebook
 
 	unlocked map[string]bool
 	flags    map[string]bool
@@ -49,6 +51,7 @@ func New(name string, lvl content.Level, x, y float64) *State {
 		Backpack: inventory.NewBackpack(StartBackpackSlots),
 		Clock:    clock.New(DayLength),
 		Avatar:   map[string]string{},
+		Notebook: experiment.NewNotebook(nil),
 		unlocked: map[string]bool{},
 		flags:    map[string]bool{},
 		owned:    map[string]bool{},
@@ -143,6 +146,7 @@ func (s *State) Snapshot() save.Data {
 		JobsDay:       s.jobsDay,
 		Jobs:          s.jobs,
 		JobsDone:      keys(s.jobsDone),
+		Discoveries:   s.Notebook.Found(),
 	}
 }
 
@@ -171,6 +175,7 @@ func FromSave(d save.Data) (*State, error) {
 	for k, v := range d.Avatar {
 		s.Avatar[k] = v
 	}
+	s.Notebook = experiment.NewNotebook(d.Discoveries)
 	s.jobsDay, s.jobs = d.JobsDay, d.Jobs
 	for _, id := range d.JobsDone {
 		s.jobsDone[id] = true

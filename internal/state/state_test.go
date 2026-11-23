@@ -47,6 +47,7 @@ func TestSnapshotRoundTrip(t *testing.T) {
 	s.Avatar = map[string]string{"hat": "cap", "pet": "cat"}
 	s.Own("avatar:hat:crown")
 	s.MarkPicked("d2-r0-1")
+	s.Notebook.Add("slime.glow")
 
 	codec := save.DefaultCodec()
 	b, err := codec.Encode(s.Snapshot())
@@ -75,6 +76,9 @@ func TestSnapshotRoundTrip(t *testing.T) {
 	}
 	if r.Avatar["hat"] != "cap" || r.Avatar["pet"] != "cat" || !r.Owns("avatar:hat:crown") || r.Owns("avatar:hat:tophat") {
 		t.Fatalf("avatar/owned not restored: %v", r.Avatar)
+	}
+	if !r.Notebook.Has("slime.glow") || r.Notebook.Has("slime.bouncy") {
+		t.Fatal("notebook not restored")
 	}
 	if !r.Picked("d2-r0-1") || r.Picked("d2-r0-2") {
 		t.Fatal("picked not restored")

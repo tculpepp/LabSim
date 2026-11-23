@@ -1,0 +1,37 @@
+{
+  "bonus": 5,
+  "sciences": [
+    {"id": "chemistry", "name": "Chemistry", "color": "#7cf08c"},
+    {"id": "physics", "name": "Physics", "color": "#ffd23f"},
+    {"id": "biology", "name": "Biology", "color": "#3aa858"},
+    {"id": "space", "name": "Space", "color": "#9b6af0"}
+  ],
+  "discoveries": [
+    {"id": "slime.glow", "science": "chemistry", "name": "Glow-in-the-Dark Slime"},
+    {"id": "slime.bouncy", "science": "chemistry", "name": "Bouncy Slime"},
+    {"id": "slime.rainbow", "science": "chemistry", "name": "Rainbow Slime"},
+    {"id": "slime.stretchy", "science": "chemistry", "name": "Stretchy Sticky Slime"},
+    {"id": "circuit.paperclip", "science": "physics", "name": "Paperclip"},
+    {"id": "circuit.coin", "science": "physics", "name": "Coin"},
+    {"id": "circuit.foil", "science": "physics", "name": "Foil"},
+    {"id": "circuit.rubber_band", "science": "physics", "name": "Rubber Band"},
+    {"id": "circuit.plastic_spoon", "science": "physics", "name": "Plastic Spoon"},
+    {"id": "circuit.wood_stick", "science": "physics", "name": "Wooden Stick"},
+    {"id": "circuit.pencil", "science": "physics", "name": "Pencil Lead"},
+    {"id": "circuit.key", "science": "physics", "name": "Key"},
+    {"id": "circuit.eraser", "science": "physics", "name": "Eraser"},
+    {"id": "circuit.marble", "science": "physics", "name": "Glass Marble"},
+    {"id": "micro.pond", "science": "biology", "name": "Pond Water"},
+    {"id": "micro.leaf", "science": "biology", "name": "Leaf"},
+    {"id": "micro.hair", "science": "biology", "name": "Hair"},
+    {"id": "micro.onion", "science": "biology", "name": "Onion Skin"},
+    {"id": "micro.salt", "science": "biology", "name": "Salt"},
+    {"id": "micro.sand", "science": "biology", "name": "Sand"},
+    {"id": "micro.wing", "science": "biology", "name": "Butterfly Wing"},
+    {"id": "gravity.moon", "science": "space", "name": "The Moon"},
+    {"id": "gravity.mars", "science": "space", "name": "Mars"},
+    {"id": "gravity.earth", "science": "space", "name": "Earth"},
+    {"id": "gravity.jupiter", "science": "space", "name": "Jupiter"},
+    {"id": "gravity.pluto", "science": "space", "name": "Pluto"}
+  ]
+}

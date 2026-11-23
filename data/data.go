@@ -29,3 +29,6 @@ var Jobs []byte
 
 //go:embed animals.json
 var Animals []byte
+
+//go:embed discoveries.json
+var Discoveries []byte

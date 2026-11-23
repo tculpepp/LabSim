@@ -151,19 +151,20 @@ func (p *Play) isUnlocked(id string) bool { return p.s.IsUnlocked(id) }
 
 func (p *Play) box() geom.Rect { return geom.Centered(p.s.X, p.s.Y, playerSize, playerSize) }
 
-// HUD buttons (screen space), right to left: pause, bag, map.
+// HUD buttons (screen space), right to left: pause, bag, map, notes.
 func (p *Play) hudButton(a *App, i int) geom.Rect {
 	return geom.Rect{X: float64(a.W) - 8 - float64(i+1)*66, Y: 8, W: 60, H: 40}
 }
 func (p *Play) pauseButton(a *App) geom.Rect { return p.hudButton(a, 0) }
 func (p *Play) bagButton(a *App) geom.Rect   { return p.hudButton(a, 1) }
 func (p *Play) mapButton(a *App) geom.Rect   { return p.hudButton(a, 2) }
+func (p *Play) notesButton(a *App) geom.Rect { return p.hudButton(a, 3) }
 func (p *Play) useButton(a *App) geom.Rect {
 	return geom.Centered(float64(a.W)-70, float64(a.H)-70, 88, 88)
 }
 
 func (p *Play) onButton(a *App, x, y float64) bool {
-	for _, r := range []geom.Rect{p.useButton(a), p.mapButton(a), p.bagButton(a), p.pauseButton(a), p.trackerRect(a)} {
+	for _, r := range []geom.Rect{p.useButton(a), p.mapButton(a), p.bagButton(a), p.pauseButton(a), p.notesButton(a), p.trackerRect(a)} {
 		if r.Contains(x, y) {
 			return true
 		}
@@ -194,6 +195,9 @@ func (p *Play) Update(a *App) error {
 		return nil
 	case inpututil.IsKeyJustPressed(ebiten.KeyI) || inpututil.IsKeyJustPressed(ebiten.KeyB) || a.Pointer.TapIn(p.bagButton(a)):
 		p.open(a, NewInventory(p.s.Backpack))
+		return nil
+	case inpututil.IsKeyJustPressed(ebiten.KeyN) || a.Pointer.TapIn(p.notesButton(a)):
+		p.open(a, &NotebookView{})
 		return nil
 	case inpututil.IsKeyJustPressed(ebiten.KeyEscape) || inpututil.IsKeyJustPressed(ebiten.KeyP) || a.Pointer.TapIn(p.pauseButton(a)):
 		p.open(a, NewPause(a))
@@ -326,6 +330,17 @@ func (p *Play) useStation(a *App, st *world.Station) {
 		p.open(a, NewEditCreator(a))
 	case "shop":
 		p.open(a, NewShop(a))
+	case "experiment":
+		switch st.ID {
+		case "exp_slime":
+			p.open(a, NewSlimeLab())
+		case "exp_circuit":
+			p.open(a, NewCircuitLab())
+		case "exp_microscope":
+			p.open(a, NewMicroLab())
+		case "exp_gravity":
+			p.open(a, NewGravityLab())
+		}
 	default:
 		a.Say("gizmo", "gizmo.name", a.T("station.soon"))
 	}

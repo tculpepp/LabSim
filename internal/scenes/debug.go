@@ -85,6 +85,55 @@ func (a *App) DebugScene(name string) error {
 		for i := range p.hearts {
 			p.hearts[i].t = 12
 		}
+	case "slime":
+		p := play()
+		for _, id := range []string{"slime_base", "glow_powder", "bouncy_beads", "rainbow_drops"} {
+			p.s.Backpack.Add(id, 2)
+		}
+		s := NewSlimeLab()
+		s.bowl = []string{"slime_base", "rainbow_drops"}
+		a.Push(s)
+	case "slime-made":
+		play()
+		s := NewSlimeLab()
+		s.result, s.note, s.noteGood, s.t = "glow", "You made Glow-in-the-Dark Slime!", true, 1
+		a.Push(s)
+	case "slime-boom":
+		play()
+		s := NewSlimeLab()
+		a.Push(s)
+		s.boom(a, "slime.hint.base")
+		s.boomT = boomTicks / 2
+	case "circuit":
+		play()
+		c := NewCircuitLab()
+		a.Push(c)
+	case "circuit-lit":
+		play()
+		a.State.Level = content.Expert
+		c := NewCircuitLab()
+		c.chosen, c.phase, c.lit, c.result, c.note, c.noteGood = "pencil", 2, true, "The bulb lights up! Pencil Lead is a conductor.", "Great prediction!", true
+		a.Push(c)
+	case "micro":
+		play()
+		a.State.Own("tool:super_microscope")
+		m := NewMicroLab()
+		m.pick(a, mustSlide("onion"))
+		a.Push(m)
+	case "gravity":
+		play()
+		g := NewGravityLab()
+		g.planet, g.jumpT = "moon", jumpSecs/2
+		a.Push(g)
+	case "notebook":
+		play()
+		for _, id := range []string{"slime.glow", "slime.rainbow", "circuit.foil"} {
+			a.State.Notebook.Add(id)
+		}
+		a.Push(&NotebookView{})
+	case "fact":
+		play()
+		a.Push(NewFactCard("gravity.moon", true))
 	case "storage":
 		p := play()
 		p.s.X, p.s.Y = 1400, 1150

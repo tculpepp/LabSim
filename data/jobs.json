@@ -1,14 +1,121 @@
 {
-  "firstDay": ["dust_nova", "rock_nova"],
+  "firstDay": [
+    "dust_nova",
+    "rock_nova"
+  ],
   "pool": [
-    {"id": "dust_nova", "title": "Bring 3 jars of star dust to Dr. Nova", "kind": "deliver", "item": "star_dust", "qty": 3, "station": "nova", "reward": 15},
-    {"id": "dust5_nova", "title": "Bring 5 jars of star dust to Dr. Nova", "kind": "deliver", "item": "star_dust", "qty": 5, "station": "nova", "reward": 22},
-    {"id": "rock_nova", "title": "Bring a moon rock to Dr. Nova", "kind": "deliver", "item": "moon_rock", "qty": 1, "station": "nova", "reward": 15},
-    {"id": "battery_circuit", "title": "Bring 2 batteries to the Circuit Builder", "kind": "deliver", "item": "battery", "qty": 2, "station": "exp_circuit", "reward": 15},
-    {"id": "bulb_circuit", "title": "Bring a light bulb to the Circuit Builder", "kind": "deliver", "item": "light_bulb", "qty": 1, "station": "exp_circuit", "reward": 12},
-    {"id": "base_slime", "title": "Bring 2 slime bases to the slime bench", "kind": "deliver", "item": "slime_base", "qty": 2, "station": "exp_slime", "reward": 14},
-    {"id": "pond_micro", "title": "Bring a pond sample to the microscope", "kind": "deliver", "item": "pond_sample", "qty": 1, "station": "exp_microscope", "reward": 12},
-    {"id": "dust_gravity", "title": "Bring 2 jars of star dust to the Space Lab", "kind": "deliver", "item": "star_dust", "qty": 2, "station": "exp_gravity", "reward": 12},
-    {"id": "rock_gravity", "title": "Bring a moon rock to the Space Lab", "kind": "deliver", "item": "moon_rock", "qty": 1, "station": "exp_gravity", "reward": 15}
+    {
+      "id": "dust_nova",
+      "title": "Bring 3 jars of star dust to Dr. Nova",
+      "kind": "deliver",
+      "item": "star_dust",
+      "qty": 3,
+      "station": "nova",
+      "reward": 15
+    },
+    {
+      "id": "dust5_nova",
+      "title": "Bring 5 jars of star dust to Dr. Nova",
+      "kind": "deliver",
+      "item": "star_dust",
+      "qty": 5,
+      "station": "nova",
+      "reward": 22
+    },
+    {
+      "id": "rock_nova",
+      "title": "Bring a moon rock to Dr. Nova",
+      "kind": "deliver",
+      "item": "moon_rock",
+      "qty": 1,
+      "station": "nova",
+      "reward": 15
+    },
+    {
+      "id": "battery_circuit",
+      "title": "Bring 2 batteries to the Circuit Builder",
+      "kind": "deliver",
+      "item": "battery",
+      "qty": 2,
+      "station": "exp_circuit",
+      "reward": 15
+    },
+    {
+      "id": "bulb_circuit",
+      "title": "Bring a light bulb to the Circuit Builder",
+      "kind": "deliver",
+      "item": "light_bulb",
+      "qty": 1,
+      "station": "exp_circuit",
+      "reward": 12
+    },
+    {
+      "id": "base_slime",
+      "title": "Bring 2 slime bases to the slime bench",
+      "kind": "deliver",
+      "item": "slime_base",
+      "qty": 2,
+      "station": "exp_slime",
+      "reward": 14
+    },
+    {
+      "id": "pond_micro",
+      "title": "Bring a pond sample to the microscope",
+      "kind": "deliver",
+      "item": "pond_sample",
+      "qty": 1,
+      "station": "exp_microscope",
+      "reward": 12
+    },
+    {
+      "id": "dust_gravity",
+      "title": "Bring 2 jars of star dust to the Space Lab",
+      "kind": "deliver",
+      "item": "star_dust",
+      "qty": 2,
+      "station": "exp_gravity",
+      "reward": 12
+    },
+    {
+      "id": "rock_gravity",
+      "title": "Bring a moon rock to the Space Lab",
+      "kind": "deliver",
+      "item": "moon_rock",
+      "qty": 1,
+      "station": "exp_gravity",
+      "reward": 15
+    },
+    {
+      "id": "exp_slime",
+      "title": "Make any slime at the slime bench",
+      "kind": "experiment",
+      "experiment": "slime",
+      "station": "exp_slime",
+      "reward": 15
+    },
+    {
+      "id": "exp_circuit",
+      "title": "Light up the bulb in the Physics Lab",
+      "kind": "experiment",
+      "experiment": "circuit",
+      "station": "exp_circuit",
+      "reward": 15
+    },
+    {
+      "id": "exp_micro",
+      "title": "Find out what's on a microscope slide",
+      "kind": "experiment",
+      "experiment": "microscope",
+      "station": "exp_microscope",
+      "reward": 15
+    },
+    {
+      "id": "exp_gravity",
+      "title": "Answer the gravity question in the Space Lab",
+      "kind": "experiment",
+      "experiment": "gravity",
+      "station": "exp_gravity",
+      "reward": 15
+    }
   ]
 }
