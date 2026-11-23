@@ -1,6 +1,5 @@
 DIST := dist
 WASM_EXEC := $(shell go env GOROOT)/lib/wasm/wasm_exec.js
-WASM_RUNNER := $(shell go env GOROOT)/lib/wasm/go_js_wasm_exec
 # Pure logic packages (no Ebitengine) can run under Node.
 PURE_PKGS = $(shell go list ./internal/... | grep -v -e /scenes -e /ui)
 
@@ -16,9 +15,10 @@ test:
 	go test ./...
 
 # Run logic tests compiled to WASM under Node, with and without localStorage.
+# tools/wasmexec.sh trims the environment: Go's wasm runner rejects big ones.
 test-wasm:
-	GOOS=js GOARCH=wasm go test -exec="$(WASM_RUNNER)" $(PURE_PKGS)
-	LS=$$(mktemp -d)/ls.json; NODE_OPTIONS="--localstorage-file=$$LS" GOOS=js GOARCH=wasm go test -count=1 -exec="$(WASM_RUNNER)" ./internal/save
+	GOOS=js GOARCH=wasm go test -exec=$(CURDIR)/tools/wasmexec.sh $(PURE_PKGS)
+	LS=$$(mktemp -d)/ls.json; NODE_OPTIONS="--localstorage-file=$$LS" GOOS=js GOARCH=wasm go test -count=1 -exec=$(CURDIR)/tools/wasmexec.sh ./internal/save
 
 # Native desktop window (fast dev loop)
 run:
