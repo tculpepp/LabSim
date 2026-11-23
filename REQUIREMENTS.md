@@ -147,7 +147,7 @@ v1 experiments (one per science):
 |----|-----------|------|
 | C-1 | **Dr. Nova** (Boss Scientist) | Loves space and always smiles. Gives daily jobs, pays the player in crystals, and congratulates them. |
 | C-2 | **Tom** (Shopkeeper) | Runs the shop and loves to help people become better scientists. Gives friendly tips about which upgrades help. **Look:** tall, light skin, blue eyes, brown hair that is a little lopsided, short beard. He is right-handed, so he holds things in his right hand. |
-| C-3 | **Gizmo** (Helper Robot) | **Look:** round and floating, hovers next to the player, has a screen face. Has lots of gadgets. Runs the tutorial, gives hints on request, and points the way to job targets. |
+| C-3 | **Gizmo** (Helper Owl) | **Look:** a round, bright green cartoon owl with big friendly eyes and lab goggles pushed up on its forehead. Floats next to the player, flapping little wings. Runs the tutorial, gives hints on request, and points the way to job targets. |
 | C-4 | **Lab Animals** | **Hamster/mouse**, **frog/axolotl** (in a tank), **bunny** (hops in the halls), **butterflies/bugs** (in the Greenhouse). They wander the map, and some are part of biology content. |
 
 ## 11. Saving, Audio, Settings

@@ -57,7 +57,7 @@
   "creator.defaultName": {"junior": "Scientist"},
 
   "gizmo.name":          {"junior": "Gizmo"},
-  "gizmo.welcome":       {"junior": "Hi %s! I'm Gizmo, your robot helper! Walk with the arrow keys or W A S D. On a tablet, drag your finger on the left side of the screen. Press E or tap Use to do things. First, let's visit Dr. Nova in her office. Follow my blue arrow!",
+  "gizmo.welcome":       {"junior": "Hi %s! I'm Gizmo, your owl helper! Walk with the arrow keys or W A S D. On a tablet, drag your finger on the left side of the screen. Press E or tap Use to do things. First, let's visit Dr. Nova in her office. Follow my blue arrow!",
                           "expert": "Welcome to the lab, %s. I'm Gizmo. Move with WASD or the arrow keys, or drag on the left side of a touch screen. E or Use interacts, M opens the map, B opens your backpack, J hides the job list. Start by visiting Dr. Nova for today's jobs."},
   "tut.paid":            {"junior": "You got paid! Crystals show up at the top of the screen. Save them up and spend them at Tom's Shop!"},
 

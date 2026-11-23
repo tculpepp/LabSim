@@ -27,22 +27,21 @@ func DrawNova(dst *ebiten.Image, cat *avatar.Catalog, x, y, u float64) {
 
 func DrawTom(dst *ebiten.Image, cat *avatar.Catalog, x, y, u, t float64) {
 	DrawAvatar(dst, cat, tomLook, x, y, u, 0)
-	const bw, bh = 16.0, 21.0 // "tall" body
-	hy := y - (4+bh)*u - 7*u
+	f := layoutFigure(tomLook["body"], x, y, u)
+	hx, hy := f.hx, f.hy
 	hair := Hex("#7a4a2a")
 	// Lopsided hair: an extra tuft sticking up on one side.
-	Circle(dst, x+5*u, hy-9*u, 3.4*u, hair)
+	Circle(dst, hx+4*u, f.top-2*u, 2.8*u, hair)
 	// Short beard around the chin, smile still showing.
-	Arc(dst, x, hy+1.5*u, 7.2*u, 0.1*math.Pi, 0.9*math.Pi, 2.4*u, hair)
+	Arc(dst, hx, hy+0.5*u, 4.6*u, 0.1*math.Pi, 0.9*math.Pi, 2*u, hair)
 	// Blue eyes.
-	Circle(dst, x-3.3*u, hy+0.5*u, 1.3*u, Hex("#3a7bd5"))
-	Circle(dst, x+3.3*u, hy+0.5*u, 1.3*u, Hex("#3a7bd5"))
-	Circle(dst, x-3.3*u, hy+0.5*u, 0.6*u, colEye)
-	Circle(dst, x+3.3*u, hy+0.5*u, 0.6*u, colEye)
+	for _, dx := range []float64{-2.6, 2.6} {
+		Circle(dst, hx+dx*u, hy+0.3*u, 1.1*u, Hex("#3a7bd5"))
+		Circle(dst, hx+dx*u, hy+0.3*u, 0.5*u, colEye)
+	}
 	// Right-handed: holds a crystal in his right hand (our left, he faces us).
-	hx, hyHand := x-(bw/2+1.5)*u, y-(4+bh)*u+bh*0.6*u
-	Diamond(dst, hx, hyHand-4*u-math.Sin(t*2)*u, 3.5*u, ColCrystal)
-	Circle(dst, hx, hyHand, 2.8*u, Hex("#fbe0cc"))
+	h := f.handL
+	Diamond(dst, h[0], h[1]-4.5*u-math.Sin(t*2)*u, 3.5*u, ColCrystal)
 }
 
 // Furniture -------------------------------------------------------------
