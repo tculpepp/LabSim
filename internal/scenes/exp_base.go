@@ -220,3 +220,14 @@ func grid(area geom.Rect, n, cols int, h float64) []geom.Rect {
 	}
 	return out
 }
+
+// smallButton is a button with small text, for rows of many choices.
+func smallButton(screen *ebiten.Image, r geom.Rect, label string, on bool) {
+	fill := ui.ColPanel
+	if on {
+		fill = ui.ColFocus
+	}
+	ui.RoundRect(screen, r, 10, fill, 2, ui.ColPanelLine)
+	cx, cy := r.Center()
+	ui.TextCentered(screen, label, ui.Bold(ui.SizeSmall), cx, cy, ui.ColText)
+}

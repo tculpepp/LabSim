@@ -123,9 +123,14 @@ func (n *NotebookView) layout(a *App) {
 	n.menu.Buttons = append(n.menu.Buttons, ui.Button{R: geom.Rect{X: W - 120, Y: 10, W: 104, H: 40}, Label: a.T("exp.back")})
 	n.ids = append(n.ids, "")
 	sci := a.Disc.Sciences[n.tab].ID
+	_, total := a.scienceCount(sci)
+	cols := 2
+	if total > 12 {
+		cols = 3 // keep long lists on one screen (480 tall)
+	}
 	col := 0
 	row := 0
-	colW := (W - 40) / 2
+	colW := (W - 40) / float64(cols)
 	for _, d := range a.Disc.List {
 		if d.Science != sci {
 			continue
@@ -136,7 +141,7 @@ func (n *NotebookView) layout(a *App) {
 		}
 		n.menu.Buttons = append(n.menu.Buttons, ui.Button{R: geom.Rect{X: 20 + float64(col)*colW + 3, Y: 116 + float64(row)*56, W: colW - 6, H: 48}, Label: label})
 		n.ids = append(n.ids, d.ID)
-		if col++; col == 2 {
+		if col++; col == cols {
 			col, row = 0, row+1
 		}
 	}
@@ -186,7 +191,16 @@ func (n *NotebookView) Draw(a *App, screen *ebiten.Image) {
 }
 
 // Text keys built from experiment IDs (checked by data/discoveries_test.go).
-func matKey(id string) string    { return "mat." + id }
-func slideKey(id string) string  { return "micro.slide." + id }
-func optKey(id string) string    { return "micro.opt." + id }
-func planetKey(id string) string { return "planet." + id }
+func matKey(id string) string        { return "mat." + id }
+func slideKey(id string) string      { return "micro.slide." + id }
+func optKey(id string) string        { return "micro.opt." + id }
+func planetKey(id string) string     { return "planet." + id }
+func powderKey(id string) string     { return "powder." + id }
+func flowerKey(id string) string     { return "flower." + id }
+func rideKey(id string) string       { return "ride." + id }
+func pickerDescKey(id string) string { return "picker.desc." + id }
+func robotSlotKey(id string) string  { return "robot.slot." + id }
+func robotPartKey(id string) string  { return "robot.part." + id }
+func robotChKey(id string) string    { return "robot.ch." + id }
+func robotGoalKey(id string) string  { return "robot.goal." + id }
+func triviaQKey(id string) string    { return "trivia." + id + ".q" }

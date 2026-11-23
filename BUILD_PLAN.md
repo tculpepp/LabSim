@@ -82,8 +82,8 @@ Go module, wallet, backpack, day clock, job board (all tested), Ebitengine place
 - Walk through the full §14 checklist with the designer.
 
 **After v1**
-1. Robot Workshop: build, fix, program, race (RW-1–RW-6).
-2. 2–3 more experiments per science.
+1. Robot Workshop: build, fix, program, race (RW-1–RW-6). *Build a Robot (RW-2) is done: pick a head, arms, and movers, then test it on Floor / Sand / Stairs (Expert adds Cave and Junkyard).*
+2. 2–3 more experiments per science. *Second experiments are done: each lab bench opens a picker. Chemistry adds Crystal Growing, Physics adds G-Force Explorer, Greenhouse adds Garden (one flower or a full garden), and Space Lab adds Space Trivia. The Notebook has a new Robots tab and uses 3 columns when a science has more than 12 discoveries.*
 3. Music and a read-aloud option.
 4. Multiple save slots and export.
 5. Online multiplayer (chat model still to be decided).

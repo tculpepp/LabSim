@@ -350,15 +350,13 @@ func (p *Play) useStation(a *App, st *world.Station) {
 	case "decorate":
 		p.open(a, NewDecorate(a))
 	case "experiment":
-		switch st.ID {
-		case "exp_slime":
-			p.open(a, NewSlimeLab())
-		case "exp_circuit":
-			p.open(a, NewCircuitLab())
-		case "exp_microscope":
-			p.open(a, NewMicroLab())
-		case "exp_gravity":
-			p.open(a, NewGravityLab())
+		switch list := roomExperiments(st.Room); len(list) {
+		case 0:
+			a.Say("gizmo", "gizmo.name", a.T("station.soon"))
+		case 1:
+			p.open(a, list[0].open())
+		default:
+			p.open(a, NewExpPicker(st.Room))
 		}
 	default:
 		a.Say("gizmo", "gizmo.name", a.T("station.soon"))

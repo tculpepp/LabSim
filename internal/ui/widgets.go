@@ -5,6 +5,7 @@ import (
 
 	"github.com/hajimehoshi/ebiten/v2"
 	"github.com/hajimehoshi/ebiten/v2/inpututil"
+	"github.com/hajimehoshi/ebiten/v2/text/v2"
 	"github.com/hajimehoshi/ebiten/v2/vector"
 
 	"labsim/internal/geom"
@@ -65,7 +66,11 @@ func (b Button) Draw(dst *ebiten.Image, focused bool) {
 	}
 	RoundRect(dst, b.R, 12, fill, 3, ColPanelLine)
 	cx, cy := b.R.Center()
-	TextCentered(dst, b.Label, Bold(SizeBody), cx, cy, txt)
+	face := Bold(SizeBody)
+	if text.Advance(b.Label, face) > b.R.W-12 {
+		face = Bold(SizeSmall) // shrink long labels rather than spill out
+	}
+	TextCentered(dst, b.Label, face, cx, cy, txt)
 }
 
 // Menu is a list of buttons usable by tap, mouse, or keyboard.

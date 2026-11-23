@@ -5,6 +5,7 @@ import (
 	"labsim/internal/decor"
 
 	"labsim/internal/content"
+	"labsim/internal/experiment"
 	"labsim/internal/state"
 )
 
@@ -155,6 +156,77 @@ func (a *App) DebugScene(name string) error {
 		g := NewGravityLab()
 		g.planet, g.jumpT = "moon", jumpSecs/2
 		a.Push(g)
+	case "picker":
+		play()
+		a.State.Notebook.Add("slime.glow")
+		a.Push(NewExpPicker("chemistry"))
+	case "crystal":
+		play()
+		c := NewCrystalLab()
+		c.powder, c.spoons, c.grown, c.growT, c.t = "alum", 3, "alum", crystalGrowTicks, 1
+		a.Push(c)
+	case "crystal-start":
+		play()
+		c := NewCrystalLab()
+		c.powder, c.spoons, c.t = "sugar", 4, 1
+		a.Push(c)
+	case "gforce":
+		play()
+		g := NewGForceLab()
+		g.current, g.rideT = "coaster", 1
+		a.Push(g)
+	case "gforce-expert":
+		play()
+		a.State.Level = content.Expert
+		g := NewGForceLab()
+		g.current, g.rideT = "jet", 1
+		a.Push(g)
+	case "trivia":
+		play()
+		tv := NewTriviaLab()
+		a.Push(tv)
+		tv.start(a)
+		tv.round[0] = experiment.TriviaRound(5, false, 20)[0]
+		for i, q := range tv.round {
+			if q.ID == "moonlight" {
+				tv.round[0], tv.round[i] = tv.round[i], tv.round[0]
+			}
+		}
+		tv.pick(a, 0)
+		tv.sparkleT, tv.pendingFC = 0, ""
+	case "garden":
+		play()
+		g := NewGardenLab()
+		g.pots[0] = experiment.Pot{Seed: "sunflower", Stage: experiment.BloomStage, Water: 1}
+		a.Push(g)
+	case "garden-full":
+		play()
+		g := NewGardenLab()
+		g.setMode(true)
+		for i := range g.pots {
+			g.pots[i] = experiment.Pot{Seed: experiment.Flowers[i%4], Stage: i % 5, Water: i % 3}
+		}
+		g.tool, g.day = toolCan, 3
+		a.Push(g)
+	case "robot":
+		play()
+		r := NewRobotLab()
+		r.bot = experiment.Robot{"head": "sonar", "arms": "magnet", "movers": "tracks"}
+		r.challenge, r.passed, r.runT = "sand", true, robotRunSecs/2
+		a.Push(r)
+	case "robot-stairs":
+		play()
+		a.State.Level = content.Expert
+		r := NewRobotLab()
+		r.bot = experiment.Robot{"head": "camera", "arms": "claw", "movers": "legs"}
+		r.challenge, r.passed, r.runT = "stairs", true, robotRunSecs
+		a.Push(r)
+	case "notebook-space":
+		play()
+		for _, id := range []string{"gravity.moon", "trivia.sun", "trivia.hottest"} {
+			a.State.Notebook.Add(id)
+		}
+		a.Push(&NotebookView{tab: 3})
 	case "notebook":
 		play()
 		for _, id := range []string{"slime.glow", "slime.rainbow", "circuit.foil"} {

@@ -2,6 +2,7 @@ package data
 
 import (
 	"encoding/json"
+	"fmt"
 	"testing"
 
 	"labsim/internal/content"
@@ -53,6 +54,38 @@ func TestEveryDiscoveryIsCataloguedWithAFact(t *testing.T) {
 			t.Errorf("no name for planet %s", p.ID)
 		}
 	}
+	for _, c := range experiment.Crystals() {
+		ids = append(ids, "crystal."+c.ID)
+		need(t, txt, "powder."+c.ID)
+	}
+	for _, r := range experiment.Rides() {
+		ids = append(ids, "gforce."+r.ID)
+		need(t, txt, "ride."+r.ID)
+	}
+	for _, q := range experiment.TriviaBank() {
+		ids = append(ids, "trivia."+q.ID)
+		need(t, txt, "trivia."+q.ID+".q")
+		for i := 0; i < q.N; i++ {
+			need(t, txt, fmt.Sprintf("trivia.%s.a%d", q.ID, i))
+		}
+	}
+	for _, f := range experiment.Flowers {
+		ids = append(ids, "garden."+f)
+		need(t, txt, "flower."+f)
+	}
+	ids = append(ids, "garden.full")
+	for _, c := range experiment.RobotChallenges(true) {
+		ids = append(ids, "robot."+c.ID)
+		need(t, txt, "robot.ch."+c.ID)
+		need(t, txt, "robot.hint."+c.ID)
+		need(t, txt, "robot.goal."+c.ID)
+	}
+	for _, slot := range experiment.RobotSlots {
+		need(t, txt, "robot.slot."+slot)
+		for _, p := range experiment.RobotParts[slot] {
+			need(t, txt, "robot.part."+p)
+		}
+	}
 	for _, id := range ids {
 		if !cat[id] {
 			t.Errorf("discovery %q not in discoveries.json", id)
@@ -63,5 +96,12 @@ func TestEveryDiscoveryIsCataloguedWithAFact(t *testing.T) {
 	}
 	if len(ids) != len(doc.Discoveries) {
 		t.Errorf("catalog has %d discoveries, experiments make %d", len(doc.Discoveries), len(ids))
+	}
+}
+
+func need(t *testing.T, txt *content.Catalog, key string) {
+	t.Helper()
+	if !txt.Has(key) {
+		t.Errorf("missing text %s", key)
 	}
 }

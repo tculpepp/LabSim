@@ -29,6 +29,13 @@ Tester: ________  Device: ________  Date: ________  Version: ________
 | Circuit Builder (Physics) | [ ] | [ ] | [ ] | [ ] |
 | Microscope (Greenhouse) | [ ] | [ ] | [ ] | [ ] |
 | Planet Gravity (Space Lab) | [ ] | [ ] | [ ] | [ ] |
+| Crystal Growing (Chemistry) | [ ] | [ ] | [ ] | [ ] |
+| G-Force Explorer (Physics) | [ ] | [ ] | [ ] | [ ] |
+| Greenhouse Garden: one flower and full garden | [ ] | [ ] | [ ] | [ ] |
+| Space Trivia (Space Lab) | [ ] | [ ] | [ ] | [ ] |
+| Build a Robot (Robot Workshop) | [ ] | [ ] | [ ] | [ ] |
+
+- [ ] Each lab bench with two experiments shows a "Pick an experiment!" menu; Back from an experiment returns to the lab.
 
 - [ ] Open the Science Notebook (N / **Notes**) and re-read a fun fact.
 

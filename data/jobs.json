@@ -116,6 +116,38 @@
       "experiment": "gravity",
       "station": "exp_gravity",
       "reward": 15
+    },
+    {
+      "id": "exp_crystal",
+      "title": "Grow any crystal in the Chemistry Lab",
+      "kind": "experiment",
+      "experiment": "crystal",
+      "station": "exp_slime",
+      "reward": 15
+    },
+    {
+      "id": "exp_gforce",
+      "title": "Answer the g-force question in the Physics Lab",
+      "kind": "experiment",
+      "experiment": "gforce",
+      "station": "exp_circuit",
+      "reward": 15
+    },
+    {
+      "id": "exp_garden",
+      "title": "Grow a flower in the Greenhouse",
+      "kind": "experiment",
+      "experiment": "garden",
+      "station": "exp_microscope",
+      "reward": 15
+    },
+    {
+      "id": "exp_trivia",
+      "title": "Pass a round of Space Trivia",
+      "kind": "experiment",
+      "experiment": "trivia",
+      "station": "exp_gravity",
+      "reward": 15
     }
   ]
 }

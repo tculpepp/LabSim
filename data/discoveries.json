@@ -4,7 +4,8 @@
     {"id": "chemistry", "name": "Chemistry", "color": "#7cf08c"},
     {"id": "physics", "name": "Physics", "color": "#ffd23f"},
     {"id": "biology", "name": "Biology", "color": "#3aa858"},
-    {"id": "space", "name": "Space", "color": "#9b6af0"}
+    {"id": "space", "name": "Space", "color": "#9b6af0"},
+    {"id": "robots", "name": "Robots", "color": "#ff8c42"}
   ],
   "discoveries": [
     {"id": "slime.glow", "science": "chemistry", "name": "Glow-in-the-Dark Slime"},
@@ -32,6 +33,37 @@
     {"id": "gravity.mars", "science": "space", "name": "Mars"},
     {"id": "gravity.earth", "science": "space", "name": "Earth"},
     {"id": "gravity.jupiter", "science": "space", "name": "Jupiter"},
-    {"id": "gravity.pluto", "science": "space", "name": "Pluto"}
+    {"id": "gravity.pluto", "science": "space", "name": "Pluto"},
+    {"id": "crystal.salt", "science": "chemistry", "name": "Salt Cubes"},
+    {"id": "crystal.sugar", "science": "chemistry", "name": "Rock Candy"},
+    {"id": "crystal.alum", "science": "chemistry", "name": "Alum Gems"},
+    {"id": "crystal.epsom", "science": "chemistry", "name": "Epsom Needles"},
+    {"id": "gforce.still", "science": "physics", "name": "Sitting Still"},
+    {"id": "gforce.elevator", "science": "physics", "name": "Elevator"},
+    {"id": "gforce.rocket", "science": "physics", "name": "Rocket Launch"},
+    {"id": "gforce.coaster", "science": "physics", "name": "Roller Coaster"},
+    {"id": "gforce.jet", "science": "physics", "name": "Jet Fighter"},
+    {"id": "trivia.sun", "science": "space", "name": "The Sun"},
+    {"id": "trivia.red_planet", "science": "space", "name": "Red Planet"},
+    {"id": "trivia.biggest", "science": "space", "name": "Biggest Planet"},
+    {"id": "trivia.rings", "science": "space", "name": "Saturn's Rings"},
+    {"id": "trivia.planets", "science": "space", "name": "Eight Planets"},
+    {"id": "trivia.closest", "science": "space", "name": "Closest Planet"},
+    {"id": "trivia.moonlight", "science": "space", "name": "Moonlight"},
+    {"id": "trivia.hottest", "science": "space", "name": "Hottest Planet"},
+    {"id": "trivia.light_time", "science": "space", "name": "Sunlight Trip"},
+    {"id": "trivia.venus_day", "science": "space", "name": "Venus Day"},
+    {"id": "trivia.volcano", "science": "space", "name": "Giant Volcano"},
+    {"id": "trivia.black_hole", "science": "space", "name": "Black Holes"},
+    {"id": "garden.sunflower", "science": "biology", "name": "Sunflower"},
+    {"id": "garden.tulip", "science": "biology", "name": "Tulip"},
+    {"id": "garden.rose", "science": "biology", "name": "Rose"},
+    {"id": "garden.daisy", "science": "biology", "name": "Daisy"},
+    {"id": "garden.full", "science": "biology", "name": "Full Garden"},
+    {"id": "robot.floor", "science": "robots", "name": "Smooth Floor"},
+    {"id": "robot.sand", "science": "robots", "name": "Sandy Desert"},
+    {"id": "robot.stairs", "science": "robots", "name": "Stairs"},
+    {"id": "robot.cave", "science": "robots", "name": "Dark Cave"},
+    {"id": "robot.junkyard", "science": "robots", "name": "Junkyard"}
   ]
 }
